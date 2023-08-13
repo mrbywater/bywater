@@ -4,7 +4,9 @@
   --mid-purple: #706F8E;
   --low-purple: #ADA9BA;
   --white: #E9E9E9;
-  
+  --yellow: #FFD802;
+  --skyblue: #A8C9EA;
+  --switcher-background: #A8C9EA;
 }
 
 .darkmode {
@@ -13,6 +15,9 @@
   --mid-purple: #706F8E;
   --low-purple: #ADA9BA;
   --white: #E9E9E9;
+  --yellow: #FFD802;
+  --skyblue: #A8C9EA;
+  --switcher-background: #706F8E;
 }
 
 $black: var(--black);
@@ -20,3 +25,6 @@ $dark-purple: var(--dark-purple);
 $mid-purple: var(--mid-purple);
 $low-purple: var(--low-purple);
 $white: var(--white);
+$yellow: var(--yellow);
+$skyblue: var(--skyblue);
+$switcher-background: var(--switcher-background);

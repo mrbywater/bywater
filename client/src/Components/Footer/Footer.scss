@@ -2,6 +2,11 @@
 
 .mainContainerFooter {
 	width: 100%;
-	height: 100px;
-	background: $dark-purple;
+	height: 40px;
+	background: $black;
+	color: $low-purple;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 15px;
 }

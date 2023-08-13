@@ -1,43 +1,70 @@
 import './Header.scss'
 import Logo from '../../Images/logo.png'
-import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { faMoon, faSun, faTemperatureHalf, faPenToSquare, faCalculator} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const headerButtons = [
 	{
-		label: 'TD',
+		label: faPenToSquare,
 		name: 'To-do list'
 	},
 	{
-		label: 'W',
+		label: faTemperatureHalf,
 		name: 'Weather'
 	},
 	{
-		label: 'C',
+		label: faCalculator,
 		name: 'Currency calculator'
 	}
 ]
 
 const Header = () => {
 
-	const [switcher, setSwitcher] = useState(true)
+	let darkMode = localStorage.getItem('darkMode');
+
+	const [switcher, setSwitcher] = useState(darkMode === 'enabled' ? false : true)
 
 	const switcherPosition = !switcher ? "35px" : ''
 
+	const enableDarkMode = () => {
+        document.body.classList.add('darkmode');
+        localStorage.setItem('darkMode', 'enabled');
+    }
+
+    const disableDarkMode = () => {
+        document.body.classList.remove('darkmode');
+        localStorage.setItem('darkMode', null);
+    }
+
 	const switchTheme = () => {
-		setSwitcher(!switcher)
+        if (darkMode !== 'enabled') {
+            enableDarkMode();
+            setSwitcher(false)
+        } else {
+            disableDarkMode();
+            setSwitcher(true)
+        }
 	}
+
+	useEffect(()=>{
+        if (darkMode === 'enabled') {
+            enableDarkMode();
+            setSwitcher(false)
+        }
+    }, [])
 
 	return (
 		<div className="mainContainerHeader">
 			<div className="headerLogo">
-				<img src={Logo}/>	
+				<img src={Logo} alt="logo"/>	
 			</div>
 			<div className="buttonsHeaderContainer">
 				{headerButtons.map(i =>
 					<div key={i.name + '_header'}> 
-						<div className="buttonsHeaderLabel">{i.label}</div>
+						<div className="buttonsHeaderLabel">
+							<FontAwesomeIcon icon={i.label}/>
+						</div>
 						<div className="buttonsHeaderName">{i.name}</div>
 					</div> 
 				)}

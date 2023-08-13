@@ -70,7 +70,8 @@
 	width: 65px;
 	height: 30px;
 	border-radius: 15px;
-	background: $white;
+	background: $switcher-background;
+	transition: .4s;
 }
 
 .themeSwitcherButton {
@@ -81,15 +82,18 @@
 	background: $black;
 	transition: .5s;
 	left: 5px;
+	z-index: 1000;
 }
 
 #sun {
 	animation: rotateSun 25s linear infinite;
 	margin-left: 1px;
+	color: $yellow;
 }
 
 #moon {
 	animation: rotateMoon 10s linear infinite;
+	color: $white;
 }
 
 @keyframes rotateSun {
