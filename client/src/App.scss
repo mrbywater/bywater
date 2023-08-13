@@ -1,0 +1,22 @@
+:root {
+  --black: #22222E;
+  --dark-purple: #393A5A;
+  --mid-purple: #706F8E;
+  --low-purple: #ADA9BA;
+  --white: #E9E9E9;
+  
+}
+
+.darkmode {
+  --black: #22222E;
+  --dark-purple: #393A5A;
+  --mid-purple: #706F8E;
+  --low-purple: #ADA9BA;
+  --white: #E9E9E9;
+}
+
+$black: var(--black);
+$dark-purple: var(--dark-purple);
+$mid-purple: var(--mid-purple);
+$low-purple: var(--low-purple);
+$white: var(--white);
