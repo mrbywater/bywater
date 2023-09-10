@@ -1,11 +1,11 @@
 import './Home.scss'
 
-const Home = () => {
+const CurrencyCalculator = () => {
 	return (
 		<div className="mainContainerContent">
-			home
+			CC
 		</div>
 	)
 }
 
-export {Home}
+export {CurrencyCalculator}

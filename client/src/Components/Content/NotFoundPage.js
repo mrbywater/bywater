@@ -1,11 +1,11 @@
 import './Home.scss'
 
-const Home = () => {
+const NotFoundPage = () => {
 	return (
 		<div className="mainContainerContent">
-			home
+			nfp
 		</div>
 	)
 }
 
-export {Home}
+export {NotFoundPage}

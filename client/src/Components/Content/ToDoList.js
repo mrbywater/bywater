@@ -1,11 +1,11 @@
 import './Home.scss'
 
-const Home = () => {
+const ToDoList = () => {
 	return (
 		<div className="mainContainerContent">
-			home
+			tdl
 		</div>
 	)
 }
 
-export {Home}
+export {ToDoList}

@@ -1,27 +1,33 @@
 import './Header.scss'
 import Logo from '../../Images/logo.png'
 import { faMoon, faSun, faTemperatureHalf, faPenToSquare, faCalculator} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const headerButtons = [
 	{
 		label: faPenToSquare,
-		name: 'To-do list'
+		name: 'To-do list',
+		selectColor: '#2d6b22'
 	},
 	{
 		label: faTemperatureHalf,
-		name: 'Weather'
+		name: 'Weather',
+		selectColor: '#271B80'
 	},
 	{
 		label: faCalculator,
-		name: 'Currency calculator'
+		name: 'Currency calculator',
+		selectColor: '#F3D408'
 	}
 ]
+
 
 const Header = () => {
 
 	let darkMode = localStorage.getItem('darkMode');
+	let location = useLocation().pathname.slice(1)
 
 	const [switcher, setSwitcher] = useState(darkMode === 'enabled' ? false : true)
 
@@ -52,21 +58,25 @@ const Header = () => {
             enableDarkMode();
             setSwitcher(false)
         }
-    }, [])
+    }, [darkMode])
+
+    const linkConvert = (str) => (str.toLowerCase().replace(/ /g, '-'))
 
 	return (
 		<div className="mainContainerHeader">
 			<div className="headerLogo">
-				<img src={Logo} alt="logo"/>	
+				<Link to={'/'}> 
+					<img src={Logo} alt="logo"/>
+				</Link>		
 			</div>
 			<div className="buttonsHeaderContainer">
 				{headerButtons.map(i =>
-					<div key={i.name + '_header'}> 
+					<Link to={linkConvert(i.name)} name={`name_${i.name}`}> 
 						<div className="buttonsHeaderLabel">
-							<FontAwesomeIcon icon={i.label}/>
+							<FontAwesomeIcon icon={i.label} style={(linkConvert(i.name) === location) ? {color: i.selectColor} : ''}/>
 						</div>
 						<div className="buttonsHeaderName">{i.name}</div>
-					</div> 
+					</Link> 
 				)}
 			</div>
 			<div className="themeSwitcherContainer">
