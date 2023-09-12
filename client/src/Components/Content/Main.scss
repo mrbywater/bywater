@@ -1,0 +1,8 @@
+@import '../../App';
+
+.mainContainerContent {
+	width: 90%;
+	margin: 30px 0 30px 5%;
+	min-height: calc(100vh - 200px);
+	background: $white;
+}

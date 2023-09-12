@@ -1,7 +1,86 @@
 @import '../../App';
 
-.mainContainerContent {
-	width: 100%;
-	min-height: calc(100vh - 140px);
-	background: $white;
+.personContainer {
+	height: 80vh;
+	display: flex;
+	background-color: $low-purple;
+	border-radius: 3px;
+}
+
+.personContainer > div {
+	width: 50%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.personContainer > div:first-child {
+	display: flex;
+	justify-content: center;
+	margin-left: 10%;
+	width: 40%;
+}
+
+.personContainer > div:first-child span:first-child {
+	font-size: 95px;
+}
+
+.personContainer > div:first-child span:last-child {
+	font-size: 40px;
+	padding-left: 4px;
+}
+
+.personContainer > div:last-child {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.personContainer > div:last-child img {
+	width: 400px;
+	border-radius: 100%;
+}
+
+.blocksLabel {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+	height: 100px;
+}
+
+.skillsContainer {
+	margin-top: 30px;
+	min-height: 500px;
+	display: flex;
+	flex-direction: column;
+}
+
+.skillsContainer > div:last-child{
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+
+.selectedSkill {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	background-color: #dedce3;
+	width: 13%;
+	height: 230px;
+	margin: 40px 2% 0 2%;
+	border-radius: 3px;
+}
+
+.selectedSkill img {
+	width: 60%;
+}
+
+.educationContainer { 
+	margin-top: 50px;
+	min-height: 500px;
+	display: flex;
+	flex-direction: column;
 }

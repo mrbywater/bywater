@@ -1,4 +1,4 @@
-import './Home.scss'
+import './Main.scss'
 
 const ToDoList = () => {
 	return (
