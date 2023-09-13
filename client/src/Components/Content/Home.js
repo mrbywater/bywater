@@ -3,6 +3,9 @@ import './Home.scss'
 import AOS from "aos"
 import "aos/dist/aos.css"
 import { useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+
 
 const skills = [
 	{
@@ -87,8 +90,59 @@ const Home = () => {
 				>
 					Education 
 				</div>
-				<div></div>
+				<div>
+					<div className="educationContainerImg" data-aos="zoom-in-right">
+						<img src={require('../../Images/unik.jpg')} alt="unik"/>
+					</div>
+					<div className="educationContainerDescp" data-aos="zoom-out">
+						<span><b>Odessa national maritime university</b> <br/>majoring in computer science</span>
+						<div className="educationContainerDescpTable">
+							<div>
+								<span>Already have</span>
+								<span>Bachelor's degree</span>
+							</div>
+							<div>
+								<span>Studying now</span>
+								<span>Master's degree</span>
+							</div>
+						</div>
+						<FontAwesomeIcon icon={faGraduationCap}/>
+					</div>
+				</div>
 			</div>
+			<div className="worksContainer">
+				<div
+					className="blocksLabel"
+					data-aos="fade-down"
+	     			data-aos-easing="linear"
+	     			data-aos-duration="500"
+				>
+					My works 
+				</div>
+				<div className="worksBackground"/>
+				<div>
+					<div data-aos="zoom-in-right">
+						<span><b>Graduate work</b></span>
+						<span>Website/online store for car service station</span>
+					</div>
+					<div data-aos="zoom-in-left">
+						<video width="640" height="360" controls>
+    						<source src={require("../../Images/GW.mp4")} type="video/mp4" />
+    						Sorry, your browser doesn't support videos.
+						</video>
+					</div>
+				</div>
+			</div>
+			<div className="aboutMeContainer">
+				<div
+					className="blocksLabel"
+					data-aos="fade-down"
+	     			data-aos-easing="linear"
+	     			data-aos-duration="500"
+				>
+					About me
+				</div>
+			</div>	
 		</div>
 	)
 }

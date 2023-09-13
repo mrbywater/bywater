@@ -9,6 +9,18 @@ body {
   background-color: $white;
 }
 
+body::-webkit-scrollbar {
+  width: 5px;            
+}
+
+body::-webkit-scrollbar-track {
+  background: $low-purple
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #181821;          
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
