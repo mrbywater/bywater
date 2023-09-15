@@ -1,15 +1,15 @@
 import './Header.scss'
 import Logo from '../../Images/logo.png'
-import { faMoon, faSun, faTemperatureHalf, faPenToSquare, faCalculator} from "@fortawesome/free-solid-svg-icons";
+import { faMoon, faSun, faTemperatureHalf, faUser, faCalculator} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const headerButtons = [
 	{
-		label: faPenToSquare,
-		name: 'To-do list',
-		selectColor: '#2d6b22'
+		label: faUser,
+		name: 'Home',
+		selectColor: '#22222E'
 	},
 	{
 		label: faTemperatureHalf,
@@ -61,6 +61,7 @@ const Header = () => {
     }, [darkMode])
 
     const linkConvert = (str) => (str.toLowerCase().replace(/ /g, '-'))
+    console.log(location.length)
 
 	return (
 		<div className="mainContainerHeader">
@@ -71,9 +72,9 @@ const Header = () => {
 			</div>
 			<div className="buttonsHeaderContainer">
 				{headerButtons.map(i =>
-					<Link to={linkConvert(i.name)} name={`name_${i.name}`}> 
+					<Link to={i.name === "Home" ? "/" : linkConvert(i.name)} key={`name_${i.name}`}> 
 						<div className="buttonsHeaderLabel">
-							<FontAwesomeIcon icon={i.label} style={(linkConvert(i.name) === location) ? {color: i.selectColor} : ''}/>
+							<FontAwesomeIcon icon={i.label} style={((i.name === "Home" ? '' : linkConvert(i.name)) === location) ? {color: i.selectColor} : ''}/>
 						</div>
 						<div className="buttonsHeaderName">{i.name}</div>
 					</Link> 

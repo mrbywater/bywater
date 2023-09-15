@@ -7,3 +7,18 @@
 	background: $white;
 	z-index: -9999999;
 }
+
+.NotFoundPage {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.NotFoundPage > span:first-child {
+	font-size: 250px;
+}
+
+.NotFoundPage > span:last-child {
+	font-size: 30px;
+}
