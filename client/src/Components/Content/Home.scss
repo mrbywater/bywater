@@ -38,7 +38,7 @@
 }
 
 .personContainer > div:last-child img {
-	width: 400px;
+	width: 65%;
 	border-radius: 100%;
 }
 
@@ -179,30 +179,6 @@
 	display: flex;
 }
 
-.worksContainer > div:last-child > div {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 50%;
-}
-
-.worksContainer > div:last-child > div:first-child {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 60px;
-	z-index: 4;
-}
-
-.worksContainer > div:last-child > div:first-child span {
-	padding: 20px 0;
-	font-size: 30px;
-}
-
-.worksContainer video {
-	border-radius: px;
-	z-index: 4;
-}
-
 .worksBackground {
 	position: absolute;
     background-color: $bg-purple;
@@ -210,6 +186,37 @@
     height: 80%;
     left: -6.47%;
     bottom: -4%;
+}
+
+.worksBackground > div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.worksBackground > div > div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50%;
+}
+
+.worksBackground > div > div:first-child {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 60px;
+	z-index: 4;
+}
+
+.worksBackground > div > div:first-child span {
+	padding: 20px 0;
+	font-size: 30px;
+}
+
+.worksContainer video {
+	border-radius: 5px;
+	z-index: 4;
 }
 
 .aboutMeContainer {

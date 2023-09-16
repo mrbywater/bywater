@@ -61,7 +61,6 @@ const Header = () => {
     }, [darkMode])
 
     const linkConvert = (str) => (str.toLowerCase().replace(/ /g, '-'))
-    console.log(location.length)
 
 	return (
 		<div className="mainContainerHeader">

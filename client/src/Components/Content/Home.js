@@ -2,7 +2,7 @@ import './Main.scss'
 import './Home.scss'
 import AOS from "aos"
 import "aos/dist/aos.css"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGraduationCap, } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
@@ -49,9 +49,12 @@ const skills = [
 
 const Home = () => {
 
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+	
 	useEffect(() => {
         AOS.init();
-      }, [])
+        window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
+    }, [])
 
 	return (
 		<div className="mainContainerContent">
@@ -92,10 +95,10 @@ const Home = () => {
 					Education 
 				</div>
 				<div>
-					<div className="educationContainerImg" data-aos="zoom-in-right">
+					<div className="educationContainerImg" data-aos="zoom-in-down">
 						<img src={require('../../Images/unik.jpg')} alt="unik"/>
 					</div>
-					<div className="educationContainerDescp" data-aos="zoom-in-left">
+					<div className="educationContainerDescp" data-aos="zoom-in-down">
 						<span><b>Odessa national maritime university</b> <br/>majoring in computer science</span>
 						<div className="educationContainerDescpTable">
 							<div>
@@ -120,17 +123,18 @@ const Home = () => {
 				>
 					My works 
 				</div>
-				<div className="worksBackground"/>
-				<div>
-					<div data-aos="zoom-in-right">
-						<span><b>Graduate work</b></span>
-						<span>Website/online store for car service station</span>
-					</div>
-					<div data-aos="zoom-in-left">
-						<video width="100%" height="100%" controls>
-    						<source src={require("../../Images/GW.mp4")} type="video/mp4" />
-    						Sorry, your browser doesn't support videos.
-						</video>
+				<div className="worksBackground">
+					<div>
+						<div data-aos="zoom-in-down">
+							<span><b>Graduate work</b></span>
+							<span>Website/online store for car service station</span>
+						</div>
+						<div data-aos="zoom-in-down">
+							<video width={windowWidth < 1200 ? "80%" : "500px"} height="80%" controls>
+	    						<source src={require("../../Images/GW.mp4")} type="video/mp4" />
+	    						Sorry, your browser doesn't support videos.
+							</video>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -144,11 +148,11 @@ const Home = () => {
 					About me
 				</div>
 				<div>
-					<div data-aos="zoom-in-right">
+					<div data-aos="zoom-in-down">
 						<span>I'm a 21-year-old computer science student from Ukraine, familiar with ReactJS, and have written several trial projects using React and ReactNative, as well as a full-fledged project - my thesis. This is a portfolio website and plus a couple of small works.</span>
 						<span><b>E-mail:</b> acaramelb228@gmail.com</span>
 					</div>
-					<div data-aos="zoom-in-left">
+					<div data-aos="zoom-in-down">
 						<div className="infoButtons">
 							<div>
 								<a href="https://github.com/mrbywater">
