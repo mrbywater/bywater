@@ -72,7 +72,86 @@
 	width: calc(100% - 30px);
 	margin: 15px;
 	border-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
+
+.nowWeatherContainer > div > div {
+	display: flex;
+	width: 85%;
+}
+
+.nowWeatherTopContainer {
+	height: 58%;
+	flex-direction: column;
+	font-weight: bold;
+}
+
+.nowWeatherTopContainer > div:nth-child(1) {
+	height: 20%;
+	display: flex;
+	align-items: flex-end;
+}
+
+.nowWeatherTopContainer > div:nth-child(2) {
+	height: 60%;
+	display: flex;
+	font-size: 30px;
+}
+
+.nowWeatherTopContainer > div:nth-child(2) > div {
+	width: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.nowWeatherTopContainer > div:nth-child(2) > div svg{
+	width: 100%;
+	height: 100%;
+	color: $low-purple;
+}
+
+.nowWeatherTopContainer > div:nth-child(2) > div:first-child {
+	justify-content: flex-start;
+}
+
+.nowWeatherTopContainer > div:nth-child(2) > div:first-child > span{
+	font-size: 20px;
+	align-items: flex-start;
+	display: flex;margin-bottom: 5px;
+}
+
+.nowWeatherTopContainer > div:nth-child(3) {
+	height: 20%;
+	border-bottom: 1px solid $low-purple;
+}
+
+.nowWeatherBottomContainer {
+	height: 28%;
+	display: flex;
+	flex-direction: column;
+	font-weight: bold;
+}
+
+.nowWeatherBottomContainer > div {
+	display: flex;
+	align-items: center;
+	height: 50%;
+}
+
+.nowWeatherBottomContainer > div > span {
+	margin-left: 5px;
+	font-size: 12px;
+	opacity: .8;
+}
+
+.nowWeatherBottomContainer > div > svg {
+	width: 20px;
+}
+
 
 .forecastContainer {
 	width: 100%;
@@ -148,6 +227,7 @@
 
 .windAndSunsetContainer > div:first-child {
 	display: flex;
+	flex-direction: column;
 	background-color: $low-purple;
 	height: calc(60% - 30px);;
 	width: calc(100% - 30px);
@@ -156,9 +236,117 @@
 	box-shadow: 2px 2px 1px 1px $black;
 }
 
+.windContainer > div:first-child {
+	display: flex;
+	align-items: center;
+	margin-left: 4%;
+	justify-content: space-between;
+	width: 92%;
+	height: 30%;
+}
+
+.windContainer > div:first-child > div:first-child {
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+	font-weight: bold;
+	opacity: .8;
+	width: 80%;
+}
+
+.windContainer > div:first-child > div:last-child {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 70px;
+	height: 50%;
+	font-size: 14px;
+	font-weight: bold;
+	width: 50px;
+	background-color: seagreen;
+}
+
+.windContainer > div:last-child {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	height: 70%;
+}
+
+.windContainer > div:last-child > div,
+.windContainer > div:last-child > svg {
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+	height: 50%;
+	width: 20%;
+}
+
+.windContainer > div:last-child > div {
+	border-left: 1px solid $black;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.windContainer > div:last-child > div span { 
+	font-size: 12px;
+}
+
 .windAndSunsetContainer > div:last-child {
 	display: flex;
 	height: 40%;
+}
+
+.sunsetContainer > div:first-child {
+	display: flex;
+	align-items: center;
+	margin-left: 4%;
+	width: 92%;
+	font-size: 14px;
+	font-weight: bold;
+	opacity: .8;
+	height: 30%;
+}
+
+.sunsetContainer > div:last-child {
+	display: flex;
+	justify-content: space-around;
+	height: 70%;
+}
+
+.sunsetContainer > div:last-child > div {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	width: 42%;
+	height: 90%;
+	border-radius: 20px;
+	background-color: $mid-purple;
+	box-shadow: inset 4px 4px $black;
+}
+
+.sunsetContainer > div:last-child > div > svg {
+	width: 40%;
+	height: 55%;
+}
+
+.sunsetContainer > div:last-child > div > div {
+	min-width: 40%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-weight: bold;
+}
+
+.sunsetContainer > div:last-child > div > div > span:first-child {
+	font-size: 14px;
+	opacity: .8;
+}
+
+.sunsetContainer > div:last-child > div > div > span:last-child {
+	font-size: 40px;
 }
 
 .windAndSunsetContainer > div:last-child > div {
