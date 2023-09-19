@@ -11,36 +11,14 @@ import {
 	faCloud,
 	faWind,
 	faSun,
-	faMoon 
+	faMoon,
+	faTemperatureHigh,
+	faArrowsDownToLine,
+	faEye,
+	faDroplet,
+	faLocationArrow
 } from "@fortawesome/free-solid-svg-icons";
 import SunCalc from "suncalc"
-
-const todayAt = [
-	{
-		time: 1
-	},
-	{
-		time: 2
-	},
-	{
-		time: 3
-	},
-	{
-		time: 4
-	},
-	{
-		time: 5
-	},
-	{
-		time: 6
-	},
-	{
-		time: 7
-	},
-	{
-		time: 8
-	},
-]
 
 const forecast = [
 	{
@@ -64,11 +42,12 @@ const Weather = () => {
 
 	const [currentWeather, setCurrentWeather] = useState(null)
 	const [forecastWeather, setForecastWeather] = useState(null)
+	const [soonW, setSoonW] = useState([])
 	const [airPollution, setAirPollution] = useState(null)
 	const [focused, setFocused] = useState(false)
-
-	const lat = '46.578537208826745'
-	const lon = '30.905969366422877'
+	
+	const lat = '46.58112212828008'
+	const lon = '30.902948546051547'
 	const apiKey = '88b372b9491a6699d7e30e316c860b20'
 	const data = new Date();
 	const options = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -113,9 +92,16 @@ const Weather = () => {
 		weatherAPI()
 	}, [])
 
-	
+	useEffect(() => {
+		if (forecastWeather) {
 
-	if (currentWeather !== null || forecastWeather !== null || airPollution !== null) {
+			forecastWeather.map(item => { 
+				setSoonW(item.list.filter((el, index) => index < 8))
+			})
+		}
+	}, [forecastWeather])
+
+	if (currentWeather && forecastWeather && airPollution) {
 		return (
 			<div className="mainContainerContent">
 				<div className="weatherContainer">
@@ -139,7 +125,7 @@ const Weather = () => {
 											<div>Now</div>
 											<div>
 												<div>
-													{Math.floor( item.main.temp)}
+													{Math.floor(item.main.temp)}
 													<span>°C</span>
 												</div>
 												<div>
@@ -172,8 +158,20 @@ const Weather = () => {
 									</div>
 									<div>
 										{forecast.map(item => (
-											<div>
-												{item.data}
+											<div className="fiveDayForecastContainer">
+												<div>
+													<FontAwesomeIcon icon={faCloud}/>
+													<div>
+														<span>20</span>
+														<span>°C</span>
+													</div>
+												</div>
+												<div>
+													fwe
+												</div>
+												<div>
+													efefe
+												</div>
 											</div>
 										))}
 									</div>	
@@ -215,10 +213,30 @@ const Weather = () => {
 												</div>
 											</div>
 										))}
-											<div>
-												<div>1</div>
-												<div>2</div>
+										{currentWeather.map(item => (
+											<div className="todaysHighlightsExtraBlocksContainer">
+												<div>
+													<span>Humidity</span>
+													<div>
+														<FontAwesomeIcon icon={faDroplet}/>
+														<div>
+															<span>{item.main.humidity}</span>
+															<span>%</span>
+														</div>
+													</div>
+												</div>
+												<div>
+													<span>Pressure</span>
+													<div>
+														<FontAwesomeIcon icon={faArrowsDownToLine}/>
+														<div>
+															<span>{item.main.pressure}</span>
+															<span>hPa</span>
+														</div>
+													</div>
+												</div>
 											</div>
+										))}	
 										</div>
 										<div className="windAndSunsetContainer">
 											<div className="sunsetContainer">
@@ -242,10 +260,30 @@ const Weather = () => {
 													</div>
 												</div>
 											</div>
-											<div>
-												<div>3</div>
-												<div>4</div>
-											</div>
+											{currentWeather.map(item => (
+												<div className="todaysHighlightsExtraBlocksContainer">
+													<div>
+														<span>Visibility</span>
+														<div>
+															<FontAwesomeIcon icon={faEye}/>
+															<div>
+																<span>{item.visibility / 1000}</span>
+																<span>km</span>
+															</div>
+														</div>
+													</div>
+													<div>
+														<span>Feels like</span>
+														<div>
+															<FontAwesomeIcon icon={faTemperatureHigh}/>
+															<div id='tempFeelsLike'>
+																<span>{Math.floor(item.main.feels_like)}</span>
+																<span>°C</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											))}
 										</div>
 									</div>
 								</div>
@@ -254,15 +292,33 @@ const Weather = () => {
 								<div>
 									<div>
 										<span>
-											Today at
+											Weather soon
 										</span>
 									</div>
 									<div>
-										{todayAt.map(item => (
-											<div>
-												{item.time}
+										{soonW.map(item =>
+											<div className="weatherSoonContainer">
+												<div>
+													<div>{item.dt_txt.slice(10, 16)}</div>
+													<div className="weatherSoonInfoContainer">
+														<div>
+															<FontAwesomeIcon icon={faCloud}/>
+															<div>
+																<span>{Math.floor(item.main.temp)}</span>
+																<span id="soonWCelsius">°C</span>
+															</div>
+														</div>
+														<div>
+															<FontAwesomeIcon icon={faLocationArrow} style={{transform: `rotate(${315+item.wind.deg}deg)`}}/>
+															<div>
+																<span>{Math.floor(item.wind.speed * 10) / 10}</span>
+																<span>s/m</span>
+															</div>
+														</div>
+													</div>
+												</div>
 											</div>
-										))}
+										)}
 									</div>	
 								</div>
 							</div>
