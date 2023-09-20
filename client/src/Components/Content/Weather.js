@@ -20,38 +20,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SunCalc from "suncalc"
 
-const forecast = [
-	{
-		data: 1
-	},
-	{
-		data: 2
-	},
-	{
-		data: 3
-	},
-	{
-		data: 4
-	},
-	{
-		data: 5
-	}
-]
-
 const Weather = () => {
 
 	const [currentWeather, setCurrentWeather] = useState(null)
 	const [forecastWeather, setForecastWeather] = useState(null)
 	const [soonW, setSoonW] = useState([])
+	const [fiveDayForecast, setFiveDayForecast] = useState([])
 	const [airPollution, setAirPollution] = useState(null)
 	const [focused, setFocused] = useState(false)
 	
-	const lat = '46.58112212828008'
-	const lon = '30.902948546051547'
+	const lat = '46.57757845344025'
+	const lon = '30.90834335028632'
 	const apiKey = '88b372b9491a6699d7e30e316c860b20'
-	const data = new Date();
-	const options = { weekday: 'long', month: 'long', day: 'numeric' };
-	const today = data.toLocaleString('en-US', options);
+	
+	const todayOptions = { weekday: 'long', month: 'short', day: 'numeric' };
+	const forecastMonth = {  day: 'numeric', month: 'short'}
+	const forecastWeekday = { weekday: 'short' }
 
 	const onFocus = () => setFocused(true)
 	const onBlur = () => setFocused(false)
@@ -70,6 +54,17 @@ const Weather = () => {
 		  } catch (err) {
 		    console.error(err.toJSON())
 		  }
+	}
+
+	const data = (lan, opt, day = null) => {
+		const dataToday = new Date();
+		const dataForecast = new Date(day)
+
+		if (day) {
+			return dataForecast.toLocaleString(lan, opt);
+		} else {
+			return dataToday.toLocaleString(lan, opt);
+		}
 	}
 
 	const letterToUpperCase = (str) => (
@@ -94,12 +89,43 @@ const Weather = () => {
 
 	useEffect(() => {
 		if (forecastWeather) {
+			const list = forecastWeather[0].list
+			
+			setSoonW(list.filter((item, index) => index < 8))
 
-			forecastWeather.map(item => { 
-				setSoonW(item.list.filter((el, index) => index < 8))
+			const fiveDayArrFinder = list.map(item => {
+				return {
+					...item,
+					data: item.dt_txt.slice(8, 10)
+				}
 			})
+
+			setFiveDayForecast(
+				fiveDayArrFinder.filter((elm, id) => (
+					fiveDayArrFinder.findIndex((item) => item.data === elm.data) === id)
+				)
+			)
 		}
 	}, [forecastWeather])
+
+	// switch (airIndex) {
+	//   case 1:
+	//     setAirIndexColor('#058240')
+	//     break;
+	//   case 2: 
+	//     setAirIndexColor('#637713')
+	//     break;
+	//   case 3:
+	//    setAirIndexColor('#f3b800')
+	//     break;
+	//   case 4:
+	//     setAirIndexColor('#EE9B01')
+	//     break;
+	//   case 5:
+	//     setAirIndexColor('#BC0000')
+	//     break;
+	// }	
+
 
 	if (currentWeather && forecastWeather && airPollution) {
 		return (
@@ -111,7 +137,6 @@ const Weather = () => {
 								placeholder="Search..." 
 								onFocus={onFocus} 
 								onBlur={onBlur}
-								onClick={console.log('currentWeather', currentWeather, "forecastWeather", forecastWeather, "airPollution", airPollution)}
 							/>
 							<FontAwesomeIcon icon={faMagnifyingGlassLocation}/>
 						</div>
@@ -139,7 +164,7 @@ const Weather = () => {
 										<div className="nowWeatherBottomContainer">
 											<div>
 												<FontAwesomeIcon icon={faCalendarDays}/>
-												<span>{today}</span>
+												<span>{data('ENG', todayOptions)}</span>
 											</div>
 											<div>
 												<FontAwesomeIcon icon={faLocationDot}/>
@@ -157,20 +182,20 @@ const Weather = () => {
 										</span>
 									</div>
 									<div>
-										{forecast.map(item => (
-											<div className="fiveDayForecastContainer">
+										{fiveDayForecast.map(item => (
+											<div className="fiveDayForecastContainer" key={`fiveDayForecast_${item.dt_txt}`}>
 												<div>
 													<FontAwesomeIcon icon={faCloud}/>
 													<div>
-														<span>20</span>
+														<span>{Math.floor(item.main.temp)}</span>
 														<span>°C</span>
 													</div>
 												</div>
 												<div>
-													fwe
+													{data('ENG', forecastMonth, item.dt_txt)}
 												</div>
 												<div>
-													efefe
+													{data('ENG', forecastWeekday, item.dt_txt)}
 												</div>
 											</div>
 										))}
@@ -297,7 +322,7 @@ const Weather = () => {
 									</div>
 									<div>
 										{soonW.map(item =>
-											<div className="weatherSoonContainer">
+											<div className="weatherSoonContainer" key={`soonW_${item.dt_txt}`}>
 												<div>
 													<div>{item.dt_txt.slice(10, 16)}</div>
 													<div className="weatherSoonInfoContainer">

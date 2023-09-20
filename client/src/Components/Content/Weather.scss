@@ -199,11 +199,16 @@
 .fiveDayForecastContainer > div > svg {
 	height: 80%;
 	margin-right: 5px;
+	color: $low-purple;
 }
 
 .fiveDayForecastContainer > div:first-child {
 	justify-content: flex-start;
-	flex: 1.3;
+}
+
+.fiveDayForecastContainer > div:nth-child(2),
+.fiveDayForecastContainer > div:nth-child(3) {
+	opacity: .7;
 }
 
 .fiveDayForecastContainer > div:first-child > div {
