@@ -1,6 +1,7 @@
 import './Main.scss'
 import './Weather.scss'
 import axios from "axios"
+import moment from 'moment'
 import { useState, useEffect } from 'react'
 import { Loader } from './Loader.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,34 +9,134 @@ import {
 	faMagnifyingGlassLocation, 
 	faCalendarDays, 
 	faLocationDot,
-	faCloud,
 	faWind,
 	faSun,
-	faMoon,
 	faTemperatureHigh,
 	faArrowsDownToLine,
 	faEye,
 	faDroplet,
-	faLocationArrow
+	faLocationArrow,
+	faCircle,
+	faMoon,
+	faCloudSun,
+	faCloudMoon,
+	faCloud,
+	faCloudShowersHeavy,
+	faCloudSunRain,
+	faCloudMoonRain,
+	faCloudBolt,
+	faSnowflake,
+	faCloudMeatball,
+	faSmog,
+	faCloudRain
 } from "@fortawesome/free-solid-svg-icons";
 import SunCalc from "suncalc"
+
+	const thunderstorm = [
+			200,	
+			201,	
+			202,	
+			210,	
+			211,	
+			212,	
+			221,	
+			230,	
+			231,	
+			232
+		]
+
+		const drizzle = [
+			300, 
+			301, 
+			302, 
+			310, 
+			311, 	
+			312, 
+			313, 
+			314,  
+			321 
+		]
+
+		const rain = [
+			500,
+			501,
+			502,
+			503,
+			504
+		]
+
+		const rainSnow = [
+			511
+		]
+
+		const rainCloud = [
+			520,
+			521,
+			522,
+			531
+		]
+
+		const snow = [
+			600,	
+			601,	
+			602,	
+			611,	
+			612,	
+			613,
+			615,	
+			616,
+			620,	
+			621,
+			622	
+		]
+
+		const atmosphere = [
+			701,	
+			711,	
+			721,	
+			731,	
+			741,	
+			751,	
+			761,
+			762,	
+			771,	
+			781	
+		]
+
+		const clear = [
+			800
+		]
+
+		const fewClouds = [
+			801
+		]
+
+		const clouds = [
+			802,
+			803,
+			804
+		]
 
 const Weather = () => {
 
 	const [currentWeather, setCurrentWeather] = useState(null)
+	const [geo, setGeo] = useState(null)
+	const [airPollution, setAirPollution] = useState(null)
 	const [forecastWeather, setForecastWeather] = useState(null)
 	const [soonW, setSoonW] = useState([])
 	const [fiveDayForecast, setFiveDayForecast] = useState([])
-	const [airPollution, setAirPollution] = useState(null)
 	const [focused, setFocused] = useState(false)
+	const [placeName, setPlaceName] = useState('Kyiv')
 	
-	const lat = '46.57757845344025'
-	const lon = '30.90834335028632'
+	const lat = '52.644037739528265'
+	const lon = '-0.053882171406064626'
 	const apiKey = '88b372b9491a6699d7e30e316c860b20'
-	
+
+	const dataToday = new Date();
 	const todayOptions = { weekday: 'long', month: 'short', day: 'numeric' };
 	const forecastMonth = {  day: 'numeric', month: 'short'}
 	const forecastWeekday = { weekday: 'short' }
+	const timeNow = moment().format('HH:MM')
 
 	const onFocus = () => setFocused(true)
 	const onBlur = () => setFocused(false)
@@ -56,14 +157,25 @@ const Weather = () => {
 		  }
 	}
 
-	const data = (lan, opt, day = null) => {
-		const dataToday = new Date();
+	const geoAPI = async () => {
+		try {
+		    const resGeo = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${placeName}&limit=5&appid=${apiKey}`)
+		    
+		    return (
+		    	setGeo([resGeo])
+		    )
+		  } catch (err) {
+		    console.error(err.toJSON())
+		  }
+	}
+
+	const data = (lang, opt, day = null) => {
 		const dataForecast = new Date(day)
 
 		if (day) {
-			return dataForecast.toLocaleString(lan, opt);
+			return dataForecast.toLocaleString(lang, opt);
 		} else {
-			return dataToday.toLocaleString(lan, opt);
+			return dataToday.toLocaleString(lang, opt);
 		}
 	}
 
@@ -103,29 +215,113 @@ const Weather = () => {
 			setFiveDayForecast(
 				fiveDayArrFinder.filter((elm, id) => (
 					fiveDayArrFinder.findIndex((item) => item.data === elm.data) === id)
-				)
+				).reverse().slice(0, 5).reverse()
 			)
 		}
 	}, [forecastWeather])
 
-	// switch (airIndex) {
-	//   case 1:
-	//     setAirIndexColor('#058240')
-	//     break;
-	//   case 2: 
-	//     setAirIndexColor('#637713')
-	//     break;
-	//   case 3:
-	//    setAirIndexColor('#f3b800')
-	//     break;
-	//   case 4:
-	//     setAirIndexColor('#EE9B01')
-	//     break;
-	//   case 5:
-	//     setAirIndexColor('#BC0000')
-	//     break;
-	// }	
+	const airIndexBgColor = (airIndex) => {
 
+		switch (airIndex) {
+		  case 1:
+		    return '#058240';
+		  case 2: 
+		    return '#637713';
+		  case 3:
+		   return '#f3b800';
+		  case 4:
+		    return '#EE9B01';
+		  case 5:
+		    return '#BC0000';
+		}	
+	}
+
+	const weatherIcon = (id, time) => {
+
+		const sunR = moment(sunSetAndSunRise('sunrise', lat, lon), "HH:mm");
+		const sunS = moment(sunSetAndSunRise('sunset', lat, lon), "HH:mm");
+		const currentTime = moment(time,"HH:mm");
+
+		if (thunderstorm.includes(id)) {
+			return {
+				icon: faCloudBolt,
+				color: '#FBCE02'
+			}
+		} else if (drizzle.includes(id)) {
+			return {
+				icon: faCloudRain,
+				color: '#B1B7BA'
+			}
+		} else if (rain.includes(id)) {
+			if ( currentTime >= sunR && currentTime < sunS) {
+				return {
+					icon: faCloudSunRain,
+					color: '#83c1e8'
+				}
+			} else {
+				return {
+					icon: faCloudMoonRain,
+					color: '#20204d'
+				}
+			}
+		} else if (rainSnow.includes(id)) {
+			return {
+				icon: faCloudMeatball,
+				color: '#c1e3ff'
+			}
+		} else if (rainCloud.includes(id)) {
+			return {
+				icon: faCloudShowersHeavy,
+				color: '#193f6e'
+			}
+		} else if (snow.includes(id)) {
+			return {
+				icon: faSnowflake,
+				color: '#e1ebec'
+			}
+		} else if (atmosphere.includes(id)) {
+			return {
+				icon: faSmog,
+				color: '#c2c5cb'
+			}
+		} else if (clear.includes(id)) {
+			if ( currentTime >= sunR && currentTime < sunS) {
+				return {
+					icon: faCircle,
+					color: '#FBCE02'
+				}
+			} else {
+				return {
+					icon: faMoon,
+					color: '#f1eaca'
+				}
+			}
+		} else if (fewClouds.includes(id)) {
+			if ( currentTime >= sunR && currentTime < sunS) {
+				return {
+					icon: faCloudSun,
+					color: '#FAD074'
+				}
+			} else {
+				return {
+					icon: faCloudMoon,
+					color: '#272727'
+				}
+			}
+			
+		} else if (clouds.includes(id)) {
+			return {
+				icon: faCloud,
+				color: '#f9f9f7'
+			}
+		}		
+	
+	}
+
+	useEffect(() => {
+		geoAPI()
+		console.log(geo)
+	}, [placeName])
 
 	if (currentWeather && forecastWeather && airPollution) {
 		return (
@@ -137,6 +333,10 @@ const Weather = () => {
 								placeholder="Search..." 
 								onFocus={onFocus} 
 								onBlur={onBlur}
+								// value={placeName}
+								onChange={(event) => {
+									setPlaceName(event.target.value)
+								}}
 							/>
 							<FontAwesomeIcon icon={faMagnifyingGlassLocation}/>
 						</div>
@@ -154,7 +354,10 @@ const Weather = () => {
 													<span>°C</span>
 												</div>
 												<div>
-													<FontAwesomeIcon icon={faCloud}/>
+													<FontAwesomeIcon 
+														style={{color: weatherIcon(item.weather[0].id, timeNow).color}} 
+														icon={weatherIcon(item.weather[0].id, timeNow).icon}
+													/>
 												</div>
 											</div>
 											<div>
@@ -163,7 +366,7 @@ const Weather = () => {
 										</div>
 										<div className="nowWeatherBottomContainer">
 											<div>
-												<FontAwesomeIcon icon={faCalendarDays}/>
+												<FontAwesomeIcon icon={faCalendarDays}/>	
 												<span>{data('ENG', todayOptions)}</span>
 											</div>
 											<div>
@@ -182,10 +385,13 @@ const Weather = () => {
 										</span>
 									</div>
 									<div>
-										{fiveDayForecast.map(item => (
+										{fiveDayForecast.slice(0, 5).map(item => (
 											<div className="fiveDayForecastContainer" key={`fiveDayForecast_${item.dt_txt}`}>
 												<div>
-													<FontAwesomeIcon icon={faCloud}/>
+													<FontAwesomeIcon 
+														style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}} 
+														icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
+													/>
 													<div>
 														<span>{Math.floor(item.main.temp)}</span>
 														<span>°C</span>
@@ -215,7 +421,7 @@ const Weather = () => {
 											<div className="windContainer">
 												<div>
 													<div>Air Quality Index</div>
-													<div>{item.list[0].main.aqi}</div>
+													<div style={{backgroundColor: `${airIndexBgColor(item.list[0].main.aqi)}`}}>{item.list[0].main.aqi}</div>
 												</div>
 												<div>
 													<FontAwesomeIcon icon={faWind}/>
@@ -327,7 +533,10 @@ const Weather = () => {
 													<div>{item.dt_txt.slice(10, 16)}</div>
 													<div className="weatherSoonInfoContainer">
 														<div>
-															<FontAwesomeIcon icon={faCloud}/>
+															<FontAwesomeIcon 
+																style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}}	
+																icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
+															/>
 															<div>
 																<span>{Math.floor(item.main.temp)}</span>
 																<span id="soonWCelsius">°C</span>
