@@ -5,8 +5,8 @@ import moment from 'moment'
 import { useState, useEffect } from 'react'
 import { Loader } from './Loader.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-	faMagnifyingGlassLocation, 
+import {
+	faMagnifyingGlassLocation,  
 	faCalendarDays, 
 	faLocationDot,
 	faWind,
@@ -126,17 +126,47 @@ const Weather = () => {
 	const [soonW, setSoonW] = useState([])
 	const [fiveDayForecast, setFiveDayForecast] = useState([])
 	const [focused, setFocused] = useState(false)
-	const [placeName, setPlaceName] = useState('Kyiv')
+	const [placeName, setPlaceName] = useState('')
+	const [lat, setLat] = useState('46.578714198186525')
+	const [lon, setLon] = useState('30.90502522889647')
 	
-	const lat = '52.644037739528265'
-	const lon = '-0.053882171406064626'
-	const apiKey = '88b372b9491a6699d7e30e316c860b20'
+	const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
 	const dataToday = new Date();
 	const todayOptions = { weekday: 'long', month: 'short', day: 'numeric' };
 	const forecastMonth = {  day: 'numeric', month: 'short'}
 	const forecastWeekday = { weekday: 'short' }
 	const timeNow = moment().format('HH:MM')
+
+	useEffect(() => {
+		weatherAPI()
+		geoAPI()
+	}, [])
+
+	useEffect(() => {
+		if (forecastWeather) {
+			const list = forecastWeather[0].list
+			
+			setSoonW(list.filter((item, index) => index < 8))
+
+			const fiveDayArrFinder = list.map(item => {
+				return {
+					...item,
+					data: moment(item.dt_txt.slice(0, 10)).format('L')
+				}
+			})
+
+			setFiveDayForecast(
+				fiveDayArrFinder.reverse().filter((elm, id) => (
+					fiveDayArrFinder.findIndex((item) => {
+						if (moment().format('L') !== item.data) {
+							return item.data === elm.data
+						}
+					}) === id)
+				).reverse()
+			)
+		}
+	}, [forecastWeather])
 
 	const onFocus = () => setFocused(true)
 	const onBlur = () => setFocused(false)
@@ -159,10 +189,10 @@ const Weather = () => {
 
 	const geoAPI = async () => {
 		try {
-		    const resGeo = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${placeName}&limit=5&appid=${apiKey}`)
+		    const resGeo = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${placeName ? placeName : 'Kyiv'}&limit=5&appid=${apiKey}`)
 		    
 		    return (
-		    	setGeo([resGeo])
+		    	setGeo([resGeo.data])
 		    )
 		  } catch (err) {
 		    console.error(err.toJSON())
@@ -195,44 +225,39 @@ const Weather = () => {
 		}
 	}
 
-	useEffect(() => {
-		weatherAPI()
-	}, [])
-
-	useEffect(() => {
-		if (forecastWeather) {
-			const list = forecastWeather[0].list
-			
-			setSoonW(list.filter((item, index) => index < 8))
-
-			const fiveDayArrFinder = list.map(item => {
-				return {
-					...item,
-					data: item.dt_txt.slice(8, 10)
-				}
-			})
-
-			setFiveDayForecast(
-				fiveDayArrFinder.filter((elm, id) => (
-					fiveDayArrFinder.findIndex((item) => item.data === elm.data) === id)
-				).reverse().slice(0, 5).reverse()
-			)
-		}
-	}, [forecastWeather])
-
 	const airIndexBgColor = (airIndex) => {
 
 		switch (airIndex) {
-		  case 1:
-		    return '#058240';
-		  case 2: 
-		    return '#637713';
-		  case 3:
-		   return '#f3b800';
-		  case 4:
-		    return '#EE9B01';
-		  case 5:
-		    return '#BC0000';
+			case 1:
+				return {
+					label: 'Good',
+					color: '#058240'
+				};
+			case 2: 
+				return {
+					label: 'Fair',
+					color: '#637713'
+				};
+			case 3:
+				return {
+					label: 'Moderate',
+					color: '#f3b800'
+				};
+			case 4:
+				return {
+					label: 'Poor',
+					color: '#EE9B01'
+				};
+			case 5:
+				return {
+					label: 'Very Poor',
+					color: '#BC0000'
+				};
+			default:
+				return {
+					label: 'Good',
+					color: '#058240'
+				};
 		}	
 	}
 
@@ -240,7 +265,7 @@ const Weather = () => {
 
 		const sunR = moment(sunSetAndSunRise('sunrise', lat, lon), "HH:mm");
 		const sunS = moment(sunSetAndSunRise('sunset', lat, lon), "HH:mm");
-		const currentTime = moment(time,"HH:mm");
+		const currentTime = moment(time, "HH:mm");
 
 		if (thunderstorm.includes(id)) {
 			return {
@@ -318,27 +343,39 @@ const Weather = () => {
 	
 	}
 
-	useEffect(() => {
-		geoAPI()
-		console.log(geo)
-	}, [placeName])
-
 	if (currentWeather && forecastWeather && airPollution) {
 		return (
 			<div className="mainContainerContent">
 				<div className="weatherContainer">
 					<div className="searchContainer">
-						<div style={focused ? {width: "25%"} : {}}>
+						<div style={focused || placeName ? {width: "25%"} : {}}>
 							<input 
 								placeholder="Search..." 
 								onFocus={onFocus} 
 								onBlur={onBlur}
-								// value={placeName}
+								className={placeName ? "searchInput searchInputActive" : "searchInput"}
 								onChange={(event) => {
 									setPlaceName(event.target.value)
 								}}
 							/>
-							<FontAwesomeIcon icon={faMagnifyingGlassLocation}/>
+							{/*<FontAwesomeIcon icon={faMagnifyingGlassLocation}/>*/}
+							<div className={placeName ? "dropDownMenuActive" : "dropDownMenuNone"}>
+								{geo[0].length ? (
+									geo[0].map(item => (
+										<div 
+											className="dropDownMenuPlaces"
+											onClick={()=> console.log(item.lat, item.lon)}
+										>
+											<FontAwesomeIcon icon={faLocationDot}/>
+											<span>{item.country}, {item.name}, {item.state}</span>
+										</div>
+									))
+								) : (
+									<div className="dropDownMenuPlaces">
+										<span>No results</span>
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 					<div className="weatherInfoContainer">
@@ -385,7 +422,7 @@ const Weather = () => {
 										</span>
 									</div>
 									<div>
-										{fiveDayForecast.slice(0, 5).map(item => (
+										{fiveDayForecast.map(item => (
 											<div className="fiveDayForecastContainer" key={`fiveDayForecast_${item.dt_txt}`}>
 												<div>
 													<FontAwesomeIcon 
@@ -421,7 +458,7 @@ const Weather = () => {
 											<div className="windContainer">
 												<div>
 													<div>Air Quality Index</div>
-													<div style={{backgroundColor: `${airIndexBgColor(item.list[0].main.aqi)}`}}>{item.list[0].main.aqi}</div>
+													<div style={{backgroundColor: `${airIndexBgColor(item.list[0].main.aqi).color}`}}>{airIndexBgColor(item.list[0].main.aqi).label}</div>
 												</div>
 												<div>
 													<FontAwesomeIcon icon={faWind}/>
