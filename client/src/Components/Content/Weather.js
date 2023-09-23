@@ -129,8 +129,8 @@ const Weather = () => {
 	const [focused, setFocused] = useState(false)
 	const [placeName, setPlaceName] = useState('')
 	const [value, setValue] = useState('')
-	const [lat, setLat] = useState('50.450001')
-	const [lon, setLon] = useState('30.523333')
+	const [lat, setLat] = useState('50.4500336')
+	const [lon, setLon] = useState('30.5241361')
 	
 	const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
@@ -173,9 +173,6 @@ const Weather = () => {
 		}
 	}, [forecastWeather])
 
-	const onFocus = () => setFocused(true)
-	const onBlur = () => setFocused(false)
-
 	const weatherAPI = async () => {
 		try {
 		    const resCW = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
@@ -204,6 +201,9 @@ const Weather = () => {
 		  }
 	}
 
+	const onFocus = () => setFocused(true)
+	const onBlur = () => setFocused(false)
+
 	const data = (lang, opt, day = null) => {
 		const dataForecast = new Date(day)
 
@@ -228,6 +228,13 @@ const Weather = () => {
 		} else {
 			return sunsetStr
 		}
+	}
+
+	const getCurrentLocatin = () => {
+		navigator.geolocation.getCurrentPosition((position) => {
+      		setLat(position.coords.latitude);
+      		setLon(position.coords.longitude);
+   		 });
 	}
 
 	const airIndexBgColor = (airIndex) => {
@@ -347,14 +354,6 @@ const Weather = () => {
 		}		
 	
 	}
-
-	const getCurrentLocatin = () => {
-		navigator.geolocation.getCurrentPosition((position) => {
-      		setLat(position.coords.latitude);
-      		setLon(position.coords.longitude);
-   		 });
-	}
-
 
 	if (currentWeather && forecastWeather && airPollution) {
 		return (

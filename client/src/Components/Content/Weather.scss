@@ -67,6 +67,7 @@
 
 .currentLocatin {
 	position: absolute;
+	transition: .3s;
     right: 15px;
     padding: 5px;
     border-radius: 35px;
@@ -77,6 +78,11 @@
 	background-color: $bg-purple;
     box-shadow: 2px 2px 4px 1px $black;
     cursor: pointer;
+}
+
+.currentLocatin:active {
+	box-shadow: inset 2px 2px 4px 1px $black;
+	opacity: .8;
 }
 
 .currentLocatin > svg {
