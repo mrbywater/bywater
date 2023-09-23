@@ -1,5 +1,14 @@
 @import '../../App';
 
+#cancelBackground {
+	position: absolute;
+	top:-5%;
+	left: -5.5%;
+	width: 111%;
+	height: 110%;
+	z-index: 99;
+}
+
 .weatherContainer {
 	display: flex;
 	flex-direction: column;
@@ -16,13 +25,15 @@
 	width: 100%;
 	height: 15%;
 	position: relative;
+	
 }
 
-.searchContainer > div {
+.searchContainer > div:first-child {
 	width: 20%;
 	height: 50%;
     position: relative;
     transition: .5s;
+    z-index: 1000;
 }
 
 .searchInput {
@@ -31,23 +42,46 @@
 	border: 2px solid $black;
 	border-radius: 25px;
 	outline: none;
-	padding: 0 5% 0 calc(5% + 5px);
+	padding: 0 45px 0 calc(5% + 5px);
 	font-size: 20px;
 	background-color: $bg-purple;
 	box-shadow: 1px 1px 1px 1px $mid-purple;
 }
 
-/*.searchContainer > div > svg {
+.searchContainer > div:first-child > svg {
 	position: absolute;
-	right: -40px;
+	right: -50px;
 	bottom: 20%;
 	font-size: 25px;
-	color: $black;;
-}*/
+	color: $black;
+}
+
+.searchAnimation {
+	animation: rotateSearch 2s linear infinite;
+}
 
 .searchInputActive {
 	border-bottom: none;
 	border-radius: 25px 25px 0 0;
+}
+
+.currentLocatin {
+	position: absolute;
+    right: 15px;
+    padding: 5px;
+    border-radius: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+	background-color: $bg-purple;
+    box-shadow: 2px 2px 4px 1px $black;
+    cursor: pointer;
+}
+
+.currentLocatin > svg {
+    width: 2rem;
+    height: 2rem;
 }
 
 .dropDownMenuActive {
@@ -59,7 +93,7 @@
 	border: 2px solid #22222E;
 	border-top: none;
 	max-height: 200px;
-	width: calc(110% + 5px);
+	width: calc(105% + 50px);
 	z-index: 1000;
 	box-shadow: 1px 1px 1px 1px $mid-purple;
 	border-radius:0 0 25px 25px;
@@ -604,6 +638,25 @@
 
   75% {
     transform: rotate(15deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes rotateSearch {
+ 
+  0% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(15deg);
+  }
+
+  75% {
+    transform: rotate(0deg);
   }
 
   100% {

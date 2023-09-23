@@ -9,6 +9,7 @@ import {
 	faMagnifyingGlassLocation,  
 	faCalendarDays, 
 	faLocationDot,
+	faLocationCrosshairs,
 	faWind,
 	faSun,
 	faTemperatureHigh,
@@ -127,8 +128,9 @@ const Weather = () => {
 	const [fiveDayForecast, setFiveDayForecast] = useState([])
 	const [focused, setFocused] = useState(false)
 	const [placeName, setPlaceName] = useState('')
-	const [lat, setLat] = useState('46.578714198186525')
-	const [lon, setLon] = useState('30.90502522889647')
+	const [value, setValue] = useState('')
+	const [lat, setLat] = useState('50.450001')
+	const [lon, setLon] = useState('30.523333')
 	
 	const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
@@ -140,8 +142,11 @@ const Weather = () => {
 
 	useEffect(() => {
 		weatherAPI()
+	}, [lat, lon])
+
+	useEffect(() => {
 		geoAPI()
-	}, [])
+	}, [placeName])
 
 	useEffect(() => {
 		if (forecastWeather) {
@@ -189,7 +194,7 @@ const Weather = () => {
 
 	const geoAPI = async () => {
 		try {
-		    const resGeo = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${placeName ? placeName : 'Kyiv'}&limit=5&appid=${apiKey}`)
+		    const resGeo = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${placeName ? placeName : ' '}&limit=5&appid=${apiKey}`)
 		    
 		    return (
 		    	setGeo([resGeo.data])
@@ -343,28 +348,47 @@ const Weather = () => {
 	
 	}
 
+	const getCurrentLocatin = () => {
+		navigator.geolocation.getCurrentPosition((position) => {
+      		setLat(position.coords.latitude);
+      		setLon(position.coords.longitude);
+   		 });
+	}
+
+
 	if (currentWeather && forecastWeather && airPollution) {
 		return (
 			<div className="mainContainerContent">
+				<div 
+					id="cancelBackground"
+					onClick={onBlur}
+				/>
 				<div className="weatherContainer">
 					<div className="searchContainer">
-						<div style={focused || placeName ? {width: "25%"} : {}}>
+						<div style={focused ? {width: "25%"} : {}}>
 							<input 
 								placeholder="Search..." 
 								onFocus={onFocus} 
-								onBlur={onBlur}
-								className={placeName ? "searchInput searchInputActive" : "searchInput"}
+								// onBlur={onBlur}
+								value={value}
+								className={focused && value ? "searchInput searchInputActive" : "searchInput"}
 								onChange={(event) => {
 									setPlaceName(event.target.value)
+									setValue(event.target.value)
 								}}
 							/>
-							{/*<FontAwesomeIcon icon={faMagnifyingGlassLocation}/>*/}
-							<div className={placeName ? "dropDownMenuActive" : "dropDownMenuNone"}>
+							<FontAwesomeIcon className={focused && value ? 'searchAnimation' : ''} icon={faMagnifyingGlassLocation}/>
+							<div className={focused && value ? "dropDownMenuActive" : "dropDownMenuNone"}>
 								{geo[0].length ? (
 									geo[0].map(item => (
 										<div 
 											className="dropDownMenuPlaces"
-											onClick={()=> console.log(item.lat, item.lon)}
+											onClick={()=> {
+												setLat(item.lat)
+												setLon(item.lon)
+												setValue('')
+												onBlur()
+											}}
 										>
 											<FontAwesomeIcon icon={faLocationDot}/>
 											<span>{item.country}, {item.name}, {item.state}</span>
@@ -376,6 +400,12 @@ const Weather = () => {
 									</div>
 								)}
 							</div>
+						</div>
+						<div 
+							className="currentLocatin"
+							onClick={()=> getCurrentLocatin()}
+						>
+							<FontAwesomeIcon icon={faLocationCrosshairs}/>
 						</div>
 					</div>
 					<div className="weatherInfoContainer">

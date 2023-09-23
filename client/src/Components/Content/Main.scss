@@ -5,7 +5,7 @@
 	margin: 30px 0 30px 5%;
 	min-height: calc(100vh - 200px);
 	background: $white;
-	z-index: -9999999;
+	position: relative;
 }
 
 .NotFoundPage {
