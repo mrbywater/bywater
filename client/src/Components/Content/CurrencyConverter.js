@@ -1,6 +1,7 @@
 import './Main.scss'
+import './CurrencyConverter.scss'
 
-const CurrencyCalculator = () => {
+const CurrencyConverter = () => {
 	return (
 		<div className="mainContainerContent">
 			CC
@@ -8,4 +9,4 @@ const CurrencyCalculator = () => {
 	)
 }
 
-export {CurrencyCalculator}
+export {CurrencyConverter}

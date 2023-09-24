@@ -4,7 +4,7 @@ import {Header} from './Components/Header/Header.js';
 import {Footer} from './Components/Footer/Footer.js';
 import {Home} from './Components/Content/Home.js';
 import {Weather} from './Components/Content/Weather.js';
-import {CurrencyCalculator} from './Components/Content/CurrencyCalculator.js';
+import {CurrencyConverter} from './Components/Content/CurrencyConverter.js';
 import {NotFoundPage} from './Components/Content/NotFoundPage.js';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/weather" element={<Weather />}/>
-        <Route path="/currency-calculator" element={<CurrencyCalculator />}/>
+        <Route path="/currency-calculator" element={<CurrencyConverter />}/>
         <Route path="*" element={<NotFoundPage />}/>
       </Routes>
       <Footer/>

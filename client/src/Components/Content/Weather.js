@@ -120,6 +120,9 @@ import SunCalc from "suncalc"
 
 const Weather = () => {
 
+	const currentLat = localStorage.getItem('currentLat');
+	const currentLon = localStorage.getItem('currentLon');
+
 	const [currentWeather, setCurrentWeather] = useState(null)
 	const [geo, setGeo] = useState(null)
 	const [airPollution, setAirPollution] = useState(null)
@@ -129,8 +132,8 @@ const Weather = () => {
 	const [focused, setFocused] = useState(false)
 	const [placeName, setPlaceName] = useState('')
 	const [value, setValue] = useState('')
-	const [lat, setLat] = useState('50.4500336')
-	const [lon, setLon] = useState('30.5241361')
+	const [lat, setLat] = useState(currentLat ? currentLat : '50.4500336')
+	const [lon, setLon] = useState(currentLon ? currentLon : '30.5241361')
 	
 	const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
@@ -234,6 +237,9 @@ const Weather = () => {
 		navigator.geolocation.getCurrentPosition((position) => {
       		setLat(position.coords.latitude);
       		setLon(position.coords.longitude);
+
+      		localStorage.setItem('currentLat', position.coords.latitude);
+      		localStorage.setItem('currentLon', position.coords.longitude);
    		 });
 	}
 
