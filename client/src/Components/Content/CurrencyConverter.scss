@@ -1,1 +1,135 @@
 @import '../../App';
+
+.currencyConverterContainer {
+	display: flex;
+	justify-content: space-around;
+	min-height: 520px;
+}
+
+.currencyConverterContainer > div {
+	display: flex;
+	border-radius: 20px;
+	background-color: $mid-purple;
+}
+
+.converterContainer {
+	width: 58%;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.converterContainer > div {
+	border-radius: 10px;
+	display: flex;
+	width: 95%;
+	box-shadow: 2px 2px 1px 1px $black;
+	background-color: $low-purple;
+}
+
+.converterContainer > div:first-child {
+	justify-content: space-evenly;
+	align-items: center;
+	height: 65%;
+}
+
+.converterContainer > div:first-child > div {
+	display: flex;
+	border-radius: 20px;
+}
+
+.converterContainer > div:first-child > div:nth-child(1),
+.converterContainer > div:first-child > div:nth-child(3) {
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 43%;
+	height: 90%;
+}
+
+.converterContainer > div:first-child > div:nth-child(1) > div,
+.converterContainer > div:first-child > div:nth-child(3) > div {
+	width: 90%;
+	border-radius: 10px;
+	display: flex;
+
+}
+
+.currencySearch {
+	height: 30%;
+	border: 1px solid black;
+}
+
+.currencyValue {
+	height: 30%;
+	background-color: $mid-purple;
+    box-shadow: inset 4px 4px $black;
+}
+
+.fastCurrency {
+	height: 20%;
+	border: 1px solid black;
+}
+
+.currencySwap {
+	justify-content: center;
+    align-items: center;
+	background-color: $bg-purple;
+	box-shadow: 2px 2px 4px 1px $black;
+	cursor: pointer;
+	width: 2.5rem;
+	height: 2.5rem;
+}
+
+.currencySwap:active {
+	box-shadow: inset 2px 2px 4px 1px $black;
+	opacity: .8;
+}
+
+.currencySwap > svg {
+	width: 50%;
+	height: 50%;
+}
+
+.converterContainer > div:last-child {
+	height: 25%;
+	justify-content: center;
+	align-items: center;
+}
+
+.dateChangerContainer {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 50%;
+	height: 60%;
+}
+
+.dateChangerContainer > span {
+	margin-right: 20px;
+	font-size: 2rem;
+}
+
+.SG-datepicker {
+	margin: 0 !important;
+}
+
+.SG-datepicker__calendar-container {
+	top: -340px !important;
+	
+}
+
+.SG-datepicker__input-container input {
+	background-color:  $low-purple;
+	outline: none;
+	box-shadow: 1px 1px 1px 1px $mid-purple;
+}
+
+.SG-datepicker__input-container .calendar-icon  {
+	fill:  $dark-purple !important;
+}
+
+.graphicContainer {
+	width: 38%;
+}
+

@@ -18,7 +18,7 @@ const headerButtons = [
 	},
 	{
 		label: faCalculator,
-		name: 'Currency calculator',
+		name: 'Currency converter',
 		selectColor: '#F3D408'
 	}
 ]

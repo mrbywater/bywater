@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/weather" element={<Weather />}/>
-        <Route path="/currency-calculator" element={<CurrencyConverter />}/>
+        <Route path="/currency-converter" element={<CurrencyConverter />}/>
         <Route path="*" element={<NotFoundPage />}/>
       </Routes>
       <Footer/>

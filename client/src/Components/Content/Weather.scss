@@ -68,16 +68,16 @@
 .currentLocatin {
 	position: absolute;
 	transition: .3s;
-    right: 15px;
-    padding: 5px;
-    border-radius: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
+	right: 15px;
+	padding: 5px;
+	border-radius: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 10000;
 	background-color: $bg-purple;
-    box-shadow: 2px 2px 4px 1px $black;
-    cursor: pointer;
+	box-shadow: 2px 2px 4px 1px $black;
+	cursor: pointer;
 }
 
 .currentLocatin:active {
@@ -408,8 +408,8 @@
 .windContainer > div:last-child > svg {
 	display: flex;
 	flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+  align-items: center;
+  justify-content: space-between;
 	height: 50%;
 	width: 20%;
 }
