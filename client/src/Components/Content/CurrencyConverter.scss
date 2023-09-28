@@ -106,30 +106,30 @@
 }
 
 .dateChangerContainer > span {
-	margin-right: 20px;
 	font-size: 2rem;
+	margin-right: 20px;
 }
 
-.SG-datepicker {
-	margin: 0 !important;
-}
-
-.SG-datepicker__calendar-container {
-	top: -340px !important;
-	
-}
-
-.SG-datepicker__input-container input {
-	background-color:  $low-purple;
+.dateChangerContainer input {
+	cursor: pointer ;
 	outline: none;
-	box-shadow: 1px 1px 1px 1px $mid-purple;
+	border: none;
+	background-color: $mid-purple;
+	box-shadow: inset 2px 2px 4px 1px $black;
+	height: 100%;
+    padding: 0px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
 }
 
-.SG-datepicker__input-container .calendar-icon  {
-	fill:  $dark-purple !important;
+.dateChangerContainer > div {
+	height: 40px;
+}
+
+.dateChangerContainer > div > div > div {
+	height: 40px;
 }
 
 .graphicContainer {
 	width: 38%;
 }
-
