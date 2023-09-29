@@ -57,7 +57,108 @@
 
 .currencySearch {
 	height: 30%;
-	border: 1px solid black;
+	position: relative;
+	color: $black;
+}
+
+.currencySearch input {
+	font-size: 1.5rem;
+    width: 100%;
+    padding: 0 5px 0 100px;
+    border-radius: 10px;
+    background: inherit;
+    border: 1px solid $black;
+    outline: none;
+    box-shadow: 0px 0px 5px 2px $dark-purple;
+}
+
+.currencySearch svg {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	top: calc(50% - 15px);
+	left: 10px;
+	animation: rotateSearch 2s linear infinite;
+} 
+
+.currencySearch > div {
+	position: absolute;
+}
+
+.currencySearch > div:first-child {
+	width: 80px;
+	padding: 3px;
+	height: 40px;
+	background-color: $bg-purple;
+	left: 10px;
+	top: calc(50% - 23px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.5rem;
+	font-weight: bold;
+	border-radius: 30px;
+}
+
+.currencySearch > div:last-child {
+	width: 100%;
+	max-height: 200px;
+	background-color: $bg-purple;
+	border: 1px solid $black;;
+	top: 105%;
+	border-radius: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	overflow: auto;
+}
+
+.currencySearch > div:last-child::-webkit-scrollbar {
+  width: 8px;            
+}
+
+.currencySearch > div:last-child::-webkit-scrollbar-track {
+  background: #cbc9d1;
+}
+
+.currencySearch > div:last-child::-webkit-scrollbar-thumb {
+  background-color: yellow;   
+  border-radius: 10px;       
+}
+
+.selectedCurrency {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+	min-height: 100px;
+	transition: .2s;
+}
+
+.selectedCurrency:hover {
+	background-color: #cbc9d1;
+}
+
+.selectedCurrency:first-child {
+	margin-top: 15px;
+}
+
+.selectedCurrency:last-child {
+	margin-bottom: 15px;
+}
+
+.selectedCurrency > span {
+	display: flex;
+	align-items: center;
+	font-size: 1.5rem;
+}
+
+.selectedCurrency > span:first-child {
+	width: 30%;
+	font-weight: bold;
+}
+
+.selectedCurrency > span:last-child {
+	width: 60%;
+	justify-content: center;
 }
 
 .currencyValue {
@@ -132,4 +233,23 @@
 
 .graphicContainer {
 	width: 38%;
+}
+
+@keyframes rotateSearch {
+ 
+  0% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(15deg);
+  }
+
+  75% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
