@@ -72,7 +72,12 @@
     box-shadow: 0px 0px 5px 2px $dark-purple;
     overflow: hidden;
   	text-overflow: ellipsis;
+  	transition: .3s;
 }
+
+.currencySearch input:hover {
+	box-shadow: 0px 0px 5px 4px $dark-purple;
+}	
 
 .inputIsFocused {
 	padding:0 25px 0 50px !important;
@@ -181,6 +186,15 @@
 .selectedCurrency > span:last-child {
 	width: 60%;
 	font-size: 1.2rem;
+}
+
+.selectedCurrencyNoItems {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	font-size: 1.5rem;
+	width: 100%;
+	min-height: 70px;
 }
 
 .currencyValue {

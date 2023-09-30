@@ -1,7 +1,7 @@
 import './Main.scss'
 import './CurrencyConverter.scss'
 import axios from "axios"
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightLeft, faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-multi-date-picker";
@@ -14,36 +14,60 @@ const CurrencyConverter = () => {
 
 	const datePickerRef = useRef();
 	const fisrtInputRef = useRef();
+	const isFocused = useRef();
 
 	const apiKey = '67d05cb1b5e4e170c3ef7b4ca60cd9c5'
 
 	const [dateValue, setDateValue] = useState(new Date())
 	const [currencySymbols, setCurrencySymbols] = useState(null)
 	const [currencySymbolsNames, setCurrencySymbolsNames] = useState([])
-	const [fisrtInputValue, setFisrtInputValue] = useState('')
+	const [filtredSymbolsNames, setFiltredSymbolsNames] = useState(currencySymbolsNames)
+	const [fisrtInputValue, setFisrtInputValue] = useState('Euro')
 	const [fisrtInputShortCurrency, setFisrtInputShortCurrency] = useState('EUR')
 	const [fisrtInputFocused, setFisrtInputFocused] = useState(false)
+
+	const filterCurrency = (inputValue, setFiltredArr) => {
+		setFiltredArr(currencySymbolsNames.filter(item => (
+			item[1].toLowerCase().includes(inputValue.toLowerCase())
+		)))
+	} 
 
 	useEffect(()=> {
 		currrencyAPI()
 	}, [])
 
 	useEffect(()=> {
+
 			if (currencySymbols) {
 				setCurrencySymbolsNames(Object.entries(currencySymbols[0]))
 			}
+
 	}, [currencySymbols])
 
 	useEffect(()=> {
-		const handleClickOutside = (event) => {
+
+		document.addEventListener('click', event => {
 			if (fisrtInputRef.current && !fisrtInputRef.current.contains(event.target)) {
 				onBlur()
 			}
-		};
-
-		document.addEventListener('click', handleClickOutside);
+		});
 
 	}, [])
+
+	useMemo(()=> {
+
+		if (currencySymbols && !Object.values(currencySymbols[0]).includes(fisrtInputValue) && !fisrtInputFocused) {
+			setFisrtInputValue(currencySymbols[0][fisrtInputShortCurrency])
+		}
+
+	}, [fisrtInputFocused])
+
+	useMemo(()=> {
+
+		filterCurrency(fisrtInputValue, setFiltredSymbolsNames)
+
+	}, [fisrtInputValue])
+
 
 	const currrencyAPI = async () => {
 		try {
@@ -58,7 +82,7 @@ const CurrencyConverter = () => {
 	}
 
 	const onFocus = () => setFisrtInputFocused(true)
-	const onBlur = () => setFisrtInputFocused(false)
+	const onBlur = () => setFisrtInputFocused(false)	
 
 	if (currencySymbols) {
 		return (
@@ -70,14 +94,14 @@ const CurrencyConverter = () => {
 								<div 
 									className="currencySearch tooltip" 
 									ref={fisrtInputRef}
-									onClick={()=>console.log(fisrtInputFocused)}
 								>
 									{fisrtInputFocused ? (
 										<>
 											<FontAwesomeIcon icon={faMagnifyingGlass}/>
 											<FontAwesomeIcon 
 												onClick={()=> {
-													setFisrtInputValue('3')
+													setFisrtInputValue('')
+													isFocused.current.focus();
 												}} 
 												icon={faXmark}
 											/>
@@ -86,33 +110,41 @@ const CurrencyConverter = () => {
 										<div>{fisrtInputShortCurrency}</div>
 									)}
 									<input 
+										ref={isFocused}
 										className={fisrtInputFocused ? 'inputIsFocused' : ''}
 										onFocus={onFocus}
 										value={fisrtInputValue}
 										onChange={(event) => {
 											setFisrtInputValue(event.target.value)
 										}}
+										onMouseDown={()=>setFisrtInputValue('')}
 									/>
 									{!fisrtInputFocused && fisrtInputValue &&
 										<span class="tooltiptext">
 											{fisrtInputValue}
 										</span>
 									}
-									{fisrtInputValue && fisrtInputFocused &&
+									{fisrtInputFocused &&
 										<div>
-											{currencySymbolsNames.map(item => (
-												<div 
-													className="selectedCurrency"
-													onClick={()=> {
-														setFisrtInputFocused(false)
-														setFisrtInputValue(item[1])
-														setFisrtInputShortCurrency(item[0])
-													}}
-												>
-													<span>{item[0]}</span>
-													<span>{item[1]}</span>
-												</div>	
-											))}
+											{filtredSymbolsNames.length ? (
+												filtredSymbolsNames.map(item => (
+													<div 
+														className="selectedCurrency"
+														onClick={()=> {
+															setFisrtInputFocused(false)
+															setFisrtInputValue(item[1])
+															setFisrtInputShortCurrency(item[0])
+														}}
+													>
+														<span>{item[0]}</span>
+														<span>{item[1]}</span>
+													</div>	
+												))) : (
+													<div className="selectedCurrencyNoItems">
+														No items
+													</div>	
+												)
+											}
 										</div>
 									}	 
 								</div>
@@ -121,7 +153,7 @@ const CurrencyConverter = () => {
 							</div>
 							<div 
 								className="currencySwap"
-								
+								onClick={()=>console.log()}
 							>
 								<FontAwesomeIcon icon={faRightLeft} />
 							</div>
