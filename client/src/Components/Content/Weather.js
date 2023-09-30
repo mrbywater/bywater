@@ -2,7 +2,7 @@ import './Main.scss'
 import './Weather.scss'
 import axios from "axios"
 import moment from 'moment'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Loader } from './Loader.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -120,6 +120,8 @@ import SunCalc from "suncalc"
 
 const Weather = () => {
 
+	const dropDownRef = useRef();
+
 	const currentLat = localStorage.getItem('currentLat');
 	const currentLon = localStorage.getItem('currentLon');
 
@@ -176,7 +178,16 @@ const Weather = () => {
 		}
 	}, [forecastWeather])
 
-	console.log(forecastWeather)
+	useEffect(()=> {
+		const handleClickOutside = (event) => {
+			if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+				onBlur()
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+
+	}, [])
 
 	const weatherAPI = async () => {
 		try {
@@ -366,17 +377,15 @@ const Weather = () => {
 	if (currentWeather && forecastWeather && airPollution) {
 		return (
 			<div className="mainContainerContent">
-				<div 
-					id="cancelBackground"
-					onClick={onBlur}
-				/>
 				<div className="weatherContainer">
 					<div className="searchContainer">
-						<div style={focused ? {width: "25%"} : {}}>
+						<div 
+							style={focused ? {width: "25%"} : {}} 
+							ref={dropDownRef}
+						>
 							<input 
 								placeholder="Search..." 
 								onFocus={onFocus} 
-								// onBlur={onBlur}
 								value={value}
 								className={focused && value ? "searchInput searchInputActive" : "searchInput"}
 								onChange={(event) => {

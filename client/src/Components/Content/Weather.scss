@@ -1,14 +1,5 @@
 @import '../../App';
 
-#cancelBackground {
-	position: absolute;
-	top:-5%;
-	left: -5.5%;
-	width: 111%;
-	height: 110%;
-	z-index: 99;
-}
-
 .weatherContainer {
 	display: flex;
 	flex-direction: column;
