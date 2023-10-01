@@ -62,17 +62,18 @@
 }
 
 .currencySearch input {
-	font-size: 1.5rem;
-    width: 100%;
-    padding: 0 5px 0 100px;
-    border-radius: 10px;
-    background: inherit;
-    border: 1px solid $black;
-    outline: none;
-    box-shadow: 0px 0px 5px 2px $dark-purple;
-    overflow: hidden;
-  	text-overflow: ellipsis;
-  	transition: .3s;
+  width: 100%;
+  padding: 0 5px 0 100px;
+  border-radius: 10px;
+  background: inherit;
+  border: 1px solid $black;
+  outline: none;
+  box-shadow: 0px 0px 5px 2px $dark-purple;
+  overflow: hidden;
+	text-overflow: ellipsis;
+	transition: .3s;
+	font: inherit;
+	font-size: 1.7rem;
 }
 
 .currencySearch input:hover {
@@ -122,6 +123,7 @@
 	font-size: 1.5rem;
 	font-weight: bold;
 	border-radius: 30px;
+	user-select: none;
 }
 
 .currencySearch > div:last-child {
@@ -200,7 +202,20 @@
 .currencyValue {
 	height: 30%;
 	background-color: $mid-purple;
-    box-shadow: inset 4px 4px $black;
+  box-shadow: inset 4px 4px $black;
+  justify-content: center;
+  align-items: center;
+}
+
+.amountInput {
+	outline: none;
+	border: none;
+	background: inherit;
+	border-radius: 10px;
+	width: calc(90% - 10px);
+	height: 85%;
+	font: inherit;
+	font-size: 2rem;
 }
 
 .fastCurrency {
@@ -210,7 +225,7 @@
 
 .currencySwap {
 	justify-content: center;
-    align-items: center;
+  align-items: center;
 	background-color: $bg-purple;
 	box-shadow: 2px 2px 4px 1px $black;
 	cursor: pointer;
@@ -254,9 +269,11 @@
 	background-color: $mid-purple;
 	box-shadow: inset 2px 2px 4px 1px $black;
 	height: 100%;
-    padding: 0px 20px;
-    font-size: 1rem;
-    border-radius: 10px;
+  padding: 0px 20px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: bold;
 }
 
 .dateChangerContainer > div {

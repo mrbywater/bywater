@@ -1,6 +1,7 @@
 import './Main.scss'
 import './CurrencyConverter.scss'
 import axios from "axios"
+import moment from 'moment'
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightLeft, faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -13,18 +14,36 @@ import { Loader } from './Loader.js'
 const CurrencyConverter = () => {
 
 	const datePickerRef = useRef();
-	const fisrtInputRef = useRef();
-	const isFocused = useRef();
+
+	const firstInputRef = useRef();
+	const isFocusedF = useRef();
+
+	const secondInputRef = useRef();
+	const isFocusedS = useRef();
 
 	const apiKey = '67d05cb1b5e4e170c3ef7b4ca60cd9c5'
 
+	// today date can ruin 
+
 	const [dateValue, setDateValue] = useState(new Date())
+	const [rightFormatDate, setRightFormatDate] = useState(moment(dateValue).format("YYYY-MM-DD"))
+	const [convertCurrency, setConvertCurrency] = useState(null)
 	const [currencySymbols, setCurrencySymbols] = useState(null)
 	const [currencySymbolsNames, setCurrencySymbolsNames] = useState([])
-	const [filtredSymbolsNames, setFiltredSymbolsNames] = useState(currencySymbolsNames)
-	const [fisrtInputValue, setFisrtInputValue] = useState('Euro')
-	const [fisrtInputShortCurrency, setFisrtInputShortCurrency] = useState('EUR')
-	const [fisrtInputFocused, setFisrtInputFocused] = useState(false)
+
+	const [filtredSymbolsNamesF, setFiltredSymbolsNamesF] = useState(currencySymbolsNames)
+	const [firstInputValue, setFirstInputValue] = useState('Euro')
+	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState('EUR')
+	const [firstInputFocused, setFirstInputFocused] = useState(false)
+	const [firstAmount, setFirstAmount] = useState(1)
+	const [currencyMultipleF, setCurrencyMultipleF] = useState(1)
+
+	const [filtredSymbolsNamesS, setFiltredSymbolsNamesS] = useState(currencySymbolsNames)
+	const [secondInputValue, setSecondInputValue] = useState('United States Dollar')
+	const [secondInputShortCurrency, setSecondInputShortCurrency] = useState('USD')
+	const [secondInputFocused, setSecondInputFocused] = useState(false)
+	const [secondAmount, setSecondAmount] = useState(1)
+	const [currencyMultipleS, setCurrencyMultipleS] = useState(1)
 
 	const filterCurrency = (inputValue, setFiltredArr) => {
 		setFiltredArr(currencySymbolsNames.filter(item => (
@@ -34,7 +53,7 @@ const CurrencyConverter = () => {
 
 	useEffect(()=> {
 		currrencyAPI()
-	}, [])
+	}, [rightFormatDate])
 
 	useEffect(()=> {
 
@@ -47,42 +66,85 @@ const CurrencyConverter = () => {
 	useEffect(()=> {
 
 		document.addEventListener('click', event => {
-			if (fisrtInputRef.current && !fisrtInputRef.current.contains(event.target)) {
-				onBlur()
+			if (firstInputRef.current && !firstInputRef.current.contains(event.target)) {
+				onBlur(setFirstInputFocused)
 			}
 		});
+
+		document.addEventListener('click', event => {
+			if (secondInputRef.current && !secondInputRef.current.contains(event.target)) {
+				onBlur(setSecondInputFocused)
+			}
+		});	
 
 	}, [])
 
 	useMemo(()=> {
 
-		if (currencySymbols && !Object.values(currencySymbols[0]).includes(fisrtInputValue) && !fisrtInputFocused) {
-			setFisrtInputValue(currencySymbols[0][fisrtInputShortCurrency])
-		}
+		if (convertCurrency) {
+			setCurrencyMultipleF(convertCurrency[0].rates[firstInputShortCurrency])
+			setCurrencyMultipleS(convertCurrency[0].rates[secondInputShortCurrency])
+		}	
 
-	}, [fisrtInputFocused])
+	}, [firstInputShortCurrency, secondInputShortCurrency, convertCurrency])
+
+	useMemo(()=> {
+		setSecondAmount(firstAmount * currencyMultipleS/currencyMultipleF)
+	}, [currencyMultipleF, currencyMultipleS, rightFormatDate])
+
+	useMemo(()=> {
+		setRightFormatDate(moment(new Date(dateValue)).format("YYYY-MM-DD"))
+	}, [dateValue.dayOfYear, dateValue.year])
 
 	useMemo(()=> {
 
-		filterCurrency(fisrtInputValue, setFiltredSymbolsNames)
+		if (currencySymbols && !Object.values(currencySymbols[0]).includes(firstInputValue) && !firstInputFocused) {
+			setFirstInputValue(currencySymbols[0][firstInputShortCurrency])
+		}
 
-	}, [fisrtInputValue])
+		if (currencySymbols && !Object.values(currencySymbols[0]).includes(secondInputValue) && !secondInputFocused) {
+			setSecondInputValue(currencySymbols[0][secondInputShortCurrency])
+		}
+
+	}, [firstInputFocused, secondInputFocused])
+
+	useMemo(()=> {
+
+		filterCurrency(firstInputValue, setFiltredSymbolsNamesF)
+		filterCurrency(secondInputValue, setFiltredSymbolsNamesS)
+
+	}, [firstInputValue, secondInputValue])
+
+	useMemo(()=> {
+		if (currencySymbols) {
+			setFirstInputValue(currencySymbols[0][firstInputShortCurrency])
+			setSecondInputValue(currencySymbols[0][secondInputShortCurrency])
+		}
+		
+	}, [firstInputShortCurrency, secondInputShortCurrency])
 
 
 	const currrencyAPI = async () => {
 		try {
-		    const res = await axios.get(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
+		    const resS = await axios.get(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
+		    const resC = await axios.get(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
 
-		    return (
-		    	setCurrencySymbols([res.data.symbols])
+		    return (	
+		    	setCurrencySymbols([resS.data.symbols]),
+		    	setConvertCurrency([resC.data])
 		    )
 		  } catch (err) {
 		    console.error(err.toJSON())
 		  }
 	}
 
-	const onFocus = () => setFisrtInputFocused(true)
-	const onBlur = () => setFisrtInputFocused(false)	
+	const onFocus = (setInput) => () => setInput(true)
+	const onBlur = (setInput) => setInput(false)	
+
+	const swapValues = () => {
+		setFirstInputShortCurrency(secondInputShortCurrency);
+		setSecondInputShortCurrency(firstInputShortCurrency);
+	}
 
 	if (currencySymbols) {
 		return (
@@ -93,48 +155,49 @@ const CurrencyConverter = () => {
 							<div>
 								<div 
 									className="currencySearch tooltip" 
-									ref={fisrtInputRef}
+									ref={firstInputRef}
 								>
-									{fisrtInputFocused ? (
+									{firstInputFocused ? (
 										<>
 											<FontAwesomeIcon icon={faMagnifyingGlass}/>
 											<FontAwesomeIcon 
 												onClick={()=> {
-													setFisrtInputValue('')
-													isFocused.current.focus();
+													setFirstInputValue('')
+													isFocusedF.current.focus();
 												}} 
 												icon={faXmark}
 											/>
 										</>
 									) : (
-										<div>{fisrtInputShortCurrency}</div>
+										<div>{firstInputShortCurrency}</div>
 									)}
 									<input 
-										ref={isFocused}
-										className={fisrtInputFocused ? 'inputIsFocused' : ''}
-										onFocus={onFocus}
-										value={fisrtInputValue}
+										ref={isFocusedF}
+										className={firstInputFocused ? 'inputIsFocused' : ''}
+										onFocus={onFocus(setFirstInputFocused)}
+										value={firstInputValue}
 										onChange={(event) => {
-											setFisrtInputValue(event.target.value)
+											setFirstInputValue(event.target.value)
 										}}
-										onMouseDown={()=>setFisrtInputValue('')}
+										onMouseDown={()=>setFirstInputValue('')}
 									/>
-									{!fisrtInputFocused && fisrtInputValue &&
+									{!firstInputFocused && firstInputValue &&
 										<span class="tooltiptext">
-											{fisrtInputValue}
+											{firstInputValue}
 										</span>
 									}
-									{fisrtInputFocused &&
+									{firstInputFocused &&
 										<div>
-											{filtredSymbolsNames.length ? (
-												filtredSymbolsNames.map(item => (
+											{filtredSymbolsNamesF.length ? (
+												filtredSymbolsNamesF.map(item => (
 													<div 
 														className="selectedCurrency"
 														onClick={()=> {
-															setFisrtInputFocused(false)
-															setFisrtInputValue(item[1])
-															setFisrtInputShortCurrency(item[0])
+															setFirstInputFocused(false)
+															setFirstInputValue(item[1])
+															setFirstInputShortCurrency(item[0])
 														}}
+														key={`f_${item[0]}`}
 													>
 														<span>{item[0]}</span>
 														<span>{item[1]}</span>
@@ -148,18 +211,103 @@ const CurrencyConverter = () => {
 										</div>
 									}	 
 								</div>
-								<div className="currencyValue"></div>
+								<div className="currencyValue">
+									<input 
+										value={firstAmount}
+										onChange={(event) => {
+											if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
+												setFirstAmount(event.target.value)
+											}
+
+											if (!/[^0-9.]/g.test(event.target.value)) {
+												setSecondAmount(event.target.value * currencyMultipleS/currencyMultipleF)
+											} 
+										}}
+										className="amountInput"
+									/>
+								</div>
 								<div className="fastCurrency"></div>
 							</div>
 							<div 
 								className="currencySwap"
-								onClick={()=>console.log()}
+								onClick={swapValues}
 							>
 								<FontAwesomeIcon icon={faRightLeft} />
 							</div>
 							<div>
-								<div className="currencySearch"></div>
-								<div className="currencyValue"></div>
+								<div 
+									className="currencySearch tooltip" 
+									ref={secondInputRef}
+								>
+									{secondInputFocused ? (
+										<>
+											<FontAwesomeIcon icon={faMagnifyingGlass}/>
+											<FontAwesomeIcon 
+												onClick={()=> {
+													setSecondInputValue('')
+													isFocusedS.current.focus();
+												}} 
+												icon={faXmark}
+											/>
+										</>
+									) : (
+										<div>{secondInputShortCurrency}</div>
+									)}
+									<input 
+										ref={isFocusedS}
+										className={secondInputFocused ? 'inputIsFocused' : ''}
+										onFocus={onFocus(setSecondInputFocused)}
+										value={secondInputValue}
+										onChange={(event) => {
+											setSecondInputValue(event.target.value)
+										}}
+										onMouseDown={()=>setSecondInputValue('')}
+									/>
+									{!secondInputFocused && secondInputValue &&
+										<span class="tooltiptext">
+											{secondInputValue}
+										</span>
+									}
+									{secondInputFocused &&
+										<div>
+											{filtredSymbolsNamesS.length ? (
+												filtredSymbolsNamesS.map(item => (
+													<div 
+														className="selectedCurrency"
+														onClick={()=> {
+															setSecondInputFocused(false)
+															setSecondInputValue(item[1])
+															setSecondInputShortCurrency(item[0])
+														}}
+														key={`s_${item[0]}`}
+													>
+														<span>{item[0]}</span>
+														<span>{item[1]}</span>
+													</div>	
+												))) : (
+													<div className="selectedCurrencyNoItems">
+														No items
+													</div>	
+												)
+											}
+										</div>
+									}	 
+								</div>
+								<div className="currencyValue">
+									<input 
+										value={secondAmount}
+										onChange={(event) => {
+											if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
+												setSecondAmount(event.target.value)
+											}
+
+											if (!/[^0-9.]/g.test(event.target.value)) {
+												setFirstAmount(event.target.value * currencyMultipleF/currencyMultipleS)
+											}
+										}}
+										className="amountInput"
+									/>
+								</div>
 								<div className="fastCurrency"></div>
 							</div>
 						</div>
@@ -173,7 +321,7 @@ const CurrencyConverter = () => {
 									className="rmdp-mobile bg-dark"
 								    value={dateValue}
 								    onChange={setDateValue}
-								    minDate={new Date('Jan 1, 1990')}
+								    minDate={new Date('Jan 1, 2000')}
 								    maxDate={new Date()}
 								    mobileButtons={[
 								      {
