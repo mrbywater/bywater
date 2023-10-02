@@ -4,6 +4,7 @@
 	display: flex;
 	justify-content: space-around;
 	min-height: 520px;
+	color: $black;
 }
 
 .currencyConverterContainer > div {
@@ -57,8 +58,7 @@
 
 .currencySearch {
 	height: 30%;
-	position: relative;
-	color: $black;
+	position: relative;	
 }
 
 .currencySearch input {
@@ -219,8 +219,25 @@
 }
 
 .fastCurrency {
-	height: 20%;
-	border: 1px solid black;
+	height: 15%;
+	justify-content: space-around;
+}
+
+.fastCurrency > div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 40px;
+	cursor: pointer;
+	transition: .3s;
+	font-weight: bold;
+}
+
+.fastCurrency > div:hover {
+	background-color: #cbc9d1;
+	color: $dark-purple;
 }
 
 .currencySwap {
@@ -254,7 +271,7 @@
 	justify-content: space-around;
 	align-items: center;
 	width: 50%;
-	height: 60%;
+	height: 60%;	
 }
 
 .dateChangerContainer > span {

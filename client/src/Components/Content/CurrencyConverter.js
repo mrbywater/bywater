@@ -11,6 +11,13 @@ import "react-multi-date-picker/styles/layouts/mobile.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import { Loader } from './Loader.js'
 
+const fastChoiceArr = [
+	'USD',
+	'EUR',
+	'UAH',
+	'BTC'
+]
+
 const CurrencyConverter = () => {
 
 	const datePickerRef = useRef();
@@ -23,9 +30,7 @@ const CurrencyConverter = () => {
 
 	const apiKey = '67d05cb1b5e4e170c3ef7b4ca60cd9c5'
 
-	// today date can ruin 
-
-	const [dateValue, setDateValue] = useState(new Date())
+	const [dateValue, setDateValue] = useState(new Date(Date.now()-86400000))
 	const [rightFormatDate, setRightFormatDate] = useState(moment(dateValue).format("YYYY-MM-DD"))
 	const [convertCurrency, setConvertCurrency] = useState(null)
 	const [currencySymbols, setCurrencySymbols] = useState(null)
@@ -128,7 +133,7 @@ const CurrencyConverter = () => {
 		try {
 		    const resS = await axios.get(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
 		    const resC = await axios.get(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
-
+		    console.log(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
 		    return (	
 		    	setCurrencySymbols([resS.data.symbols]),
 		    	setConvertCurrency([resC.data])
@@ -226,7 +231,15 @@ const CurrencyConverter = () => {
 										className="amountInput"
 									/>
 								</div>
-								<div className="fastCurrency"></div>
+								<div className="fastCurrency">
+									{fastChoiceArr.map(item => (
+										<div 
+											onClick={()=>setFirstInputShortCurrency(item)}
+										>
+											{item}
+										</div>
+									))}
+								</div>
 							</div>
 							<div 
 								className="currencySwap"
@@ -308,7 +321,15 @@ const CurrencyConverter = () => {
 										className="amountInput"
 									/>
 								</div>
-								<div className="fastCurrency"></div>
+								<div className="fastCurrency">
+									{fastChoiceArr.map(item => (
+										<div
+											onClick={()=>setSecondInputShortCurrency(item)}
+										>
+											{item}
+										</div>
+									))}
+								</div>
 							</div>
 						</div>
 						<div>
@@ -322,14 +343,14 @@ const CurrencyConverter = () => {
 								    value={dateValue}
 								    onChange={setDateValue}
 								    minDate={new Date('Jan 1, 2000')}
-								    maxDate={new Date()}
+								    maxDate={new Date(Date.now()-86400000)}
 								    mobileButtons={[
 								      {
-								        label: "TODAY",
+								        label: "YESTERDAY",
 								        type: "button",
 								        className: "rmdp-button rmdp-action-button",
 								        onClick: () => {
-								        	setDateValue(new Date())
+								        	setDateValue(new Date(Date.now()-86400000))
 								        	datePickerRef.current.closeCalendar()
 								        },
 								      },
