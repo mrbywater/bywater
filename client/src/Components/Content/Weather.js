@@ -626,7 +626,7 @@ const Weather = () => {
 															</div>
 														</div>
 														<div>
-															<FontAwesomeIcon icon={faLocationArrow} style={{transform: `rotate(${315+item.wind.deg}deg)`}}/>
+															<FontAwesomeIcon icon={faLocationArrow} style={{transform: `rotate(${135+item.wind.deg}deg)`}}/>
 															<div>
 																<span>{Math.floor(item.wind.speed * 10) / 10}</span>
 																<span>s/m</span>

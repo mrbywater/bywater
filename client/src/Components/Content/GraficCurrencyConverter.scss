@@ -1,0 +1,12 @@
+@import '../../App';
+
+.graficContainer {
+	background-color: $bg-purple;
+	border-radius: 10px;
+	padding: 10px;
+	height: 60%;
+	width: calc(90% - 20px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

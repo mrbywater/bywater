@@ -2,6 +2,7 @@ import './Main.scss'
 import './CurrencyConverter.scss'
 import axios from "axios"
 import moment from 'moment'
+import { GraficCurrencyConverter } from './GraficCurrencyConverter.js';
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightLeft, faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -50,14 +51,41 @@ const CurrencyConverter = () => {
 	const [secondAmount, setSecondAmount] = useState(1)
 	const [currencyMultipleS, setCurrencyMultipleS] = useState(1)
 
+	const datesArr = Array.from({ length: 5 }, (item, index) => (
+		moment(rightFormatDate).subtract('months', index).format('YYYY-MM-DD'))
+	).reverse();
+
 	const filterCurrency = (inputValue, setFiltredArr) => {
 		setFiltredArr(currencySymbolsNames.filter(item => (
 			item[1].toLowerCase().includes(inputValue.toLowerCase())
 		)))
 	} 
 
+	const currrencyAPI = async () => {
+		try {
+		    const resS = await axios.get(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
+		    const resC = await axios.get(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
+		    
+		    return (	
+		    	setCurrencySymbols([resS.data.symbols]),
+		    	setConvertCurrency([resC.data])
+		    )
+		  } catch (err) {
+		    console.error(err.toJSON())
+		  }
+	}
+
+	const onFocus = (setInput) => () => setInput(true)
+	const onBlur = (setInput) => setInput(false)	
+
+	const swapValues = () => {
+		setFirstInputShortCurrency(secondInputShortCurrency);
+		setSecondInputShortCurrency(firstInputShortCurrency);
+	}
+
 	useEffect(()=> {
 		currrencyAPI()
+		console.log(datesArr)
 	}, [rightFormatDate])
 
 	useEffect(()=> {
@@ -127,29 +155,6 @@ const CurrencyConverter = () => {
 		}
 		
 	}, [firstInputShortCurrency, secondInputShortCurrency])
-
-
-	const currrencyAPI = async () => {
-		try {
-		    const resS = await axios.get(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
-		    const resC = await axios.get(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
-		    console.log(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
-		    return (	
-		    	setCurrencySymbols([resS.data.symbols]),
-		    	setConvertCurrency([resC.data])
-		    )
-		  } catch (err) {
-		    console.error(err.toJSON())
-		  }
-	}
-
-	const onFocus = (setInput) => () => setInput(true)
-	const onBlur = (setInput) => setInput(false)	
-
-	const swapValues = () => {
-		setFirstInputShortCurrency(secondInputShortCurrency);
-		setSecondInputShortCurrency(firstInputShortCurrency);
-	}
 
 	if (currencySymbols) {
 		return (
@@ -361,7 +366,21 @@ const CurrencyConverter = () => {
 						</div>
 					</div>
 					<div className="graphicContainer">
-						<div></div>
+						<div>
+							<GraficCurrencyConverter/>
+							<div>
+								<div className='graphicValues'>
+									<div>Min</div>
+									<div>Avg</div>
+									<div>Max</div>
+								</div>
+								<div className='graphicValues'>
+									<div>1</div>
+									<div>2</div>
+									<div>3</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
