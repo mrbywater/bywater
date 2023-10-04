@@ -139,7 +139,7 @@ const Weather = () => {
 	
 	const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
-	const dataToday = new Date();
+	const dateToday = new Date();
 	const todayOptions = { weekday: 'long', month: 'short', day: 'numeric' };
 	const forecastMonth = {  day: 'numeric', month: 'short'}
 	const forecastWeekday = { weekday: 'short' }
@@ -220,13 +220,13 @@ const Weather = () => {
 	const onFocus = () => setFocused(true)
 	const onBlur = () => setFocused(false)
 
-	const data = (lang, opt, day = null) => {
+	const date = (lang, opt, day = null) => {
 		const dataForecast = new Date(day)
 
 		if (day) {
 			return dataForecast.toLocaleString(lang, opt);
 		} else {
-			return dataToday.toLocaleString(lang, opt);
+			return dateToday.toLocaleString(lang, opt);
 		}
 	}
 
@@ -450,7 +450,7 @@ const Weather = () => {
 										<div className="nowWeatherBottomContainer">
 											<div>
 												<FontAwesomeIcon icon={faCalendarDays}/>	
-												<span>{data('ENG', todayOptions)}</span>
+												<span>{date('ENG', todayOptions)}</span>
 											</div>
 											<div>
 												<FontAwesomeIcon icon={faLocationDot}/>
@@ -481,10 +481,10 @@ const Weather = () => {
 													</div>
 												</div>
 												<div>
-													{data('ENG', forecastMonth, item.dt_txt)}
+													{date('ENG', forecastMonth, item.dt_txt)}
 												</div>
 												<div>
-													{data('ENG', forecastWeekday, item.dt_txt)}
+													{date('ENG', forecastWeekday, item.dt_txt)}
 												</div>
 											</div>
 										))}

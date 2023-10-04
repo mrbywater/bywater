@@ -3,6 +3,7 @@ import './CurrencyConverter.scss'
 import axios from "axios"
 import moment from 'moment'
 import { GraficCurrencyConverter } from './GraficCurrencyConverter.js';
+import { InputBlockCurrencyConverter } from './InputBlockCurrencyConverter.js';
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightLeft, faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -23,12 +24,6 @@ const CurrencyConverter = () => {
 
 	const datePickerRef = useRef();
 
-	const firstInputRef = useRef();
-	const isFocusedF = useRef();
-
-	const secondInputRef = useRef();
-	const isFocusedS = useRef();
-
 	const apiKey = '67d05cb1b5e4e170c3ef7b4ca60cd9c5'
 
 	const [dateValue, setDateValue] = useState(new Date(Date.now()-86400000))
@@ -36,8 +31,8 @@ const CurrencyConverter = () => {
 	const [convertCurrency, setConvertCurrency] = useState(null)
 	const [currencySymbols, setCurrencySymbols] = useState(null)
 	const [currencySymbolsNames, setCurrencySymbolsNames] = useState([])
+	const [graficValues, setGraficValues] = useState(null)
 
-	const [filtredSymbolsNamesF, setFiltredSymbolsNamesF] = useState(currencySymbolsNames)
 	const [firstInputValue, setFirstInputValue] = useState('Euro')
 	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState('EUR')
 	const [firstInputFocused, setFirstInputFocused] = useState(false)
@@ -51,15 +46,13 @@ const CurrencyConverter = () => {
 	const [secondAmount, setSecondAmount] = useState(1)
 	const [currencyMultipleS, setCurrencyMultipleS] = useState(1)
 
-	const datesArr = Array.from({ length: 5 }, (item, index) => (
-		moment(rightFormatDate).subtract('months', index).format('YYYY-MM-DD'))
-	).reverse();
+	const datesArr = Array.from({ length: 3 }, (item, index) => (
+		moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))
+	).reverse()
 
-	const filterCurrency = (inputValue, setFiltredArr) => {
-		setFiltredArr(currencySymbolsNames.filter(item => (
-			item[1].toLowerCase().includes(inputValue.toLowerCase())
-		)))
-	} 
+	const graficUrlCreator = datesArr.map(dates => (
+		axios.get(`http://data.fixer.io/api/${dates}?access_key=${apiKey}&symbols=${firstInputShortCurrency},${secondInputShortCurrency}&format=1`)
+	))
 
 	const currrencyAPI = async () => {
 		try {
@@ -75,17 +68,46 @@ const CurrencyConverter = () => {
 		  }
 	}
 
-	const onFocus = (setInput) => () => setInput(true)
-	const onBlur = (setInput) => setInput(false)	
+	const graficAPI = async () => {
+		try {
+		    const res = await axios.all(graficUrlCreator)
+
+		    return(
+		    	setGraficValues(res.map(cur => cur.data))
+		    )
+		  } catch (err) {
+		    console.error(err.toJSON())
+		  }
+	}
+
 
 	const swapValues = () => {
 		setFirstInputShortCurrency(secondInputShortCurrency);
 		setSecondInputShortCurrency(firstInputShortCurrency);
 	}
 
+	const handlerAmmountChangeFirst = () => (event) => {
+		if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
+			setFirstAmount(event.target.value)
+		}
+
+		if (!/[^0-9.]/g.test(event.target.value)) {
+			setSecondAmount(event.target.value * currencyMultipleS/currencyMultipleF)
+		} 
+	}
+
+	const handlerAmmountChangeSecond = () => (event) => {
+		if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
+			setSecondAmount(event.target.value)
+		}
+
+		if (!/[^0-9.]/g.test(event.target.value)) {
+			setFirstAmount(event.target.value * currencyMultipleF/currencyMultipleS)
+		}
+	}
+
 	useEffect(()=> {
 		currrencyAPI()
-		console.log(datesArr)
 	}, [rightFormatDate])
 
 	useEffect(()=> {
@@ -96,21 +118,11 @@ const CurrencyConverter = () => {
 
 	}, [currencySymbols])
 
-	useEffect(()=> {
+	useMemo(()=> {
 
-		document.addEventListener('click', event => {
-			if (firstInputRef.current && !firstInputRef.current.contains(event.target)) {
-				onBlur(setFirstInputFocused)
-			}
-		});
+		graficAPI()	
 
-		document.addEventListener('click', event => {
-			if (secondInputRef.current && !secondInputRef.current.contains(event.target)) {
-				onBlur(setSecondInputFocused)
-			}
-		});	
-
-	}, [])
+	}, [rightFormatDate, firstInputShortCurrency, secondInputShortCurrency])
 
 	useMemo(()=> {
 
@@ -142,13 +154,6 @@ const CurrencyConverter = () => {
 	}, [firstInputFocused, secondInputFocused])
 
 	useMemo(()=> {
-
-		filterCurrency(firstInputValue, setFiltredSymbolsNamesF)
-		filterCurrency(secondInputValue, setFiltredSymbolsNamesS)
-
-	}, [firstInputValue, secondInputValue])
-
-	useMemo(()=> {
 		if (currencySymbols) {
 			setFirstInputValue(currencySymbols[0][firstInputShortCurrency])
 			setSecondInputValue(currencySymbols[0][secondInputShortCurrency])
@@ -156,190 +161,44 @@ const CurrencyConverter = () => {
 		
 	}, [firstInputShortCurrency, secondInputShortCurrency])
 
-	if (currencySymbols) {
+	if (currencySymbols && graficValues) {
 		return (
 			<div className="mainContainerContent">
 				<div className="currencyConverterContainer">
 					<div className="converterContainer">
 						<div>
-							<div>
-								<div 
-									className="currencySearch tooltip" 
-									ref={firstInputRef}
-								>
-									{firstInputFocused ? (
-										<>
-											<FontAwesomeIcon icon={faMagnifyingGlass}/>
-											<FontAwesomeIcon 
-												onClick={()=> {
-													setFirstInputValue('')
-													isFocusedF.current.focus();
-												}} 
-												icon={faXmark}
-											/>
-										</>
-									) : (
-										<div>{firstInputShortCurrency}</div>
-									)}
-									<input 
-										ref={isFocusedF}
-										className={firstInputFocused ? 'inputIsFocused' : ''}
-										onFocus={onFocus(setFirstInputFocused)}
-										value={firstInputValue}
-										onChange={(event) => {
-											setFirstInputValue(event.target.value)
-										}}
-										onMouseDown={()=>setFirstInputValue('')}
-									/>
-									{!firstInputFocused && firstInputValue &&
-										<span class="tooltiptext">
-											{firstInputValue}
-										</span>
-									}
-									{firstInputFocused &&
-										<div>
-											{filtredSymbolsNamesF.length ? (
-												filtredSymbolsNamesF.map(item => (
-													<div 
-														className="selectedCurrency"
-														onClick={()=> {
-															setFirstInputFocused(false)
-															setFirstInputValue(item[1])
-															setFirstInputShortCurrency(item[0])
-														}}
-														key={`f_${item[0]}`}
-													>
-														<span>{item[0]}</span>
-														<span>{item[1]}</span>
-													</div>	
-												))) : (
-													<div className="selectedCurrencyNoItems">
-														No items
-													</div>	
-												)
-											}
-										</div>
-									}	 
-								</div>
-								<div className="currencyValue">
-									<input 
-										value={firstAmount}
-										onChange={(event) => {
-											if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
-												setFirstAmount(event.target.value)
-											}
-
-											if (!/[^0-9.]/g.test(event.target.value)) {
-												setSecondAmount(event.target.value * currencyMultipleS/currencyMultipleF)
-											} 
-										}}
-										className="amountInput"
-									/>
-								</div>
-								<div className="fastCurrency">
-									{fastChoiceArr.map(item => (
-										<div 
-											onClick={()=>setFirstInputShortCurrency(item)}
-										>
-											{item}
-										</div>
-									))}
-								</div>
-							</div>
+							<InputBlockCurrencyConverter
+								inputFocused={firstInputFocused}
+								setInputFocused={setFirstInputFocused}
+								inputShortCurrency={firstInputShortCurrency}
+								setInputShortCurrency={setFirstInputShortCurrency}
+								inputValue={firstInputValue}
+								setInputValue={setFirstInputValue}
+								currencySymbolsNames={currencySymbolsNames}
+								handlerAmmountChange={handlerAmmountChangeFirst()}
+								amount={firstAmount}
+							/>
 							<div 
 								className="currencySwap"
 								onClick={swapValues}
 							>
 								<FontAwesomeIcon icon={faRightLeft} />
 							</div>
-							<div>
-								<div 
-									className="currencySearch tooltip" 
-									ref={secondInputRef}
-								>
-									{secondInputFocused ? (
-										<>
-											<FontAwesomeIcon icon={faMagnifyingGlass}/>
-											<FontAwesomeIcon 
-												onClick={()=> {
-													setSecondInputValue('')
-													isFocusedS.current.focus();
-												}} 
-												icon={faXmark}
-											/>
-										</>
-									) : (
-										<div>{secondInputShortCurrency}</div>
-									)}
-									<input 
-										ref={isFocusedS}
-										className={secondInputFocused ? 'inputIsFocused' : ''}
-										onFocus={onFocus(setSecondInputFocused)}
-										value={secondInputValue}
-										onChange={(event) => {
-											setSecondInputValue(event.target.value)
-										}}
-										onMouseDown={()=>setSecondInputValue('')}
-									/>
-									{!secondInputFocused && secondInputValue &&
-										<span class="tooltiptext">
-											{secondInputValue}
-										</span>
-									}
-									{secondInputFocused &&
-										<div>
-											{filtredSymbolsNamesS.length ? (
-												filtredSymbolsNamesS.map(item => (
-													<div 
-														className="selectedCurrency"
-														onClick={()=> {
-															setSecondInputFocused(false)
-															setSecondInputValue(item[1])
-															setSecondInputShortCurrency(item[0])
-														}}
-														key={`s_${item[0]}`}
-													>
-														<span>{item[0]}</span>
-														<span>{item[1]}</span>
-													</div>	
-												))) : (
-													<div className="selectedCurrencyNoItems">
-														No items
-													</div>	
-												)
-											}
-										</div>
-									}	 
-								</div>
-								<div className="currencyValue">
-									<input 
-										value={secondAmount}
-										onChange={(event) => {
-											if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
-												setSecondAmount(event.target.value)
-											}
-
-											if (!/[^0-9.]/g.test(event.target.value)) {
-												setFirstAmount(event.target.value * currencyMultipleF/currencyMultipleS)
-											}
-										}}
-										className="amountInput"
-									/>
-								</div>
-								<div className="fastCurrency">
-									{fastChoiceArr.map(item => (
-										<div
-											onClick={()=>setSecondInputShortCurrency(item)}
-										>
-											{item}
-										</div>
-									))}
-								</div>
-							</div>
+							<InputBlockCurrencyConverter
+								inputFocused={secondInputFocused}
+								setInputFocused={setSecondInputFocused}
+								inputShortCurrency={secondInputShortCurrency}
+								setInputShortCurrency={setSecondInputShortCurrency}
+								inputValue={secondInputValue}
+								setInputValue={setSecondInputValue}
+								currencySymbolsNames={currencySymbolsNames}
+								handlerAmmountChange={handlerAmmountChangeSecond()}
+								amount={secondAmount}
+							/>
 						</div>
 						<div>
 							<div className="dateChangerContainer">
-								<span>
+								<span onClick={()=>console.log(graficValues)}>
 									Date
 								</span>
 								<DatePicker 
@@ -367,7 +226,12 @@ const CurrencyConverter = () => {
 					</div>
 					<div className="graphicContainer">
 						<div>
-							<GraficCurrencyConverter/>
+							<GraficCurrencyConverter
+								datesArr={datesArr}
+								graficValues={graficValues}
+								firstInputShortCurrency={firstInputShortCurrency}
+								secondInputShortCurrency={secondInputShortCurrency}
+							/>
 							<div>
 								<div className='graphicValues'>
 									<div>Min</div>

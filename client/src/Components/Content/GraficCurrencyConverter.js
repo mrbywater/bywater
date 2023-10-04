@@ -1,4 +1,6 @@
 import './GraficCurrencyConverter.scss'
+import moment from 'moment'
+import { useState, useMemo } from 'react'
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -23,7 +25,14 @@ ChartJS.register(
   Filler 
 );
 
-const GraficCurrencyConverter = () => {
+const GraficCurrencyConverter = (props) => {
+
+	const {
+		datesArr,
+		graficValues,
+		firstInputShortCurrency,
+		secondInputShortCurrency
+	} = props
 
 	const options = {
 	  responsive: true,
@@ -37,14 +46,22 @@ const GraficCurrencyConverter = () => {
 	  },
 	};	
 
-	const labels = ['January', 'February', 'March', 'April', 'May'];
+	const labels = datesArr.map(dates => moment(dates).format('MMM'));
+
+	const [value, setValue] = useState([])
+
+	useMemo(()=> {
+		setValue(graficValues.map(item => (
+				item.rates[secondInputShortCurrency]/item.rates[firstInputShortCurrency]
+		)))
+	}, [graficValues])
 
 	const data = {
 	  labels,
 	  datasets: [
 	    {
 	      fill: true,
-	      data: [217594, 181045, 253060, 156519, 175162],
+	      data: value,
 	      borderColor: 'rgb(57, 58, 90, 0.7)',
 	      backgroundColor: 'rgba(57, 58, 90, 0.4)',
 	    },
