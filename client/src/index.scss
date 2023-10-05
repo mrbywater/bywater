@@ -6,7 +6,7 @@ body {
   font-family: 'Red Hat Text', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $white;
+  background-color: $theme-background;
 }
 
 body::-webkit-scrollbar {

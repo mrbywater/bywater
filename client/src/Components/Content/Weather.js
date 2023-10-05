@@ -145,50 +145,6 @@ const Weather = () => {
 	const forecastWeekday = { weekday: 'short' }
 	const timeNow = moment().format('HH:MM')
 
-	useEffect(() => {
-		weatherAPI()
-	}, [lat, lon])
-
-	useEffect(() => {
-		geoAPI()
-	}, [placeName])
-
-	useEffect(() => {
-		if (forecastWeather) {
-			const list = forecastWeather[0].list
-			
-			setSoonW(list.filter((item, index) => index < 8))
-
-			const fiveDayArrFinder = list.map(item => {
-				return {
-					...item,
-					data: moment(item.dt_txt.slice(0, 10)).format('L')
-				}
-			})
-
-			setFiveDayForecast(
-				fiveDayArrFinder.reverse().filter((elm, id) => (
-					fiveDayArrFinder.findIndex((item) => {
-						if (moment().format('L') !== item.data) {
-							return item.data === elm.data
-						}
-					}) === id)
-				).reverse()
-			)
-		}
-	}, [forecastWeather])
-
-	useEffect(()=> {
-		const handleClickOutside = (event) => {
-			if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
-				onBlur()
-			}
-		};
-
-		document.addEventListener('click', handleClickOutside);
-
-	}, [])
-
 	const weatherAPI = async () => {
 		try {
 		    const resCW = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
@@ -220,6 +176,18 @@ const Weather = () => {
 	const onFocus = () => setFocused(true)
 	const onBlur = () => setFocused(false)
 
+	const inputHandler = () => (event) => {
+		setPlaceName(event.target.value)
+		setValue(event.target.value)
+	}
+
+	const placeSelectHandler = (item) => () => {
+		setLat(item.lat)
+		setLon(item.lon)
+		setValue('')
+		onBlur()
+	}
+
 	const date = (lang, opt, day = null) => {
 		const dataForecast = new Date(day)
 
@@ -246,7 +214,7 @@ const Weather = () => {
 		}
 	}
 
-	const getCurrentLocatin = () => {
+	const getCurrentLocatin = () => () => {
 		navigator.geolocation.getCurrentPosition((position) => {
       		setLat(position.coords.latitude);
       		setLon(position.coords.longitude);
@@ -374,6 +342,50 @@ const Weather = () => {
 	
 	}
 
+	useEffect(() => {
+		weatherAPI()
+	}, [lat, lon])
+
+	useEffect(() => {
+		geoAPI()
+	}, [placeName])
+
+	useEffect(() => {
+		if (forecastWeather) {
+			const list = forecastWeather[0].list
+			
+			setSoonW(list.filter((item, index) => index < 8))
+
+			const fiveDayArrFinder = list.map(item => {
+				return {
+					...item,
+					data: moment(item.dt_txt.slice(0, 10)).format('L')
+				}
+			})
+
+			setFiveDayForecast(
+				fiveDayArrFinder.reverse().filter((elm, id) => (
+					fiveDayArrFinder.findIndex((item) => {
+						if (moment().format('L') !== item.data) {
+							return item.data === elm.data
+						}
+					}) === id)
+				).reverse()
+			)
+		}
+	}, [forecastWeather])
+
+	useEffect(()=> {
+		const handleClickOutside = (event) => {
+			if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+				onBlur()
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+
+	}, [])
+
 	if (currentWeather && forecastWeather && airPollution) {
 		return (
 			<div className="mainContainerContent">
@@ -388,10 +400,7 @@ const Weather = () => {
 								onFocus={onFocus} 
 								value={value}
 								className={focused && value ? "searchInput searchInputActive" : "searchInput"}
-								onChange={(event) => {
-									setPlaceName(event.target.value)
-									setValue(event.target.value)
-								}}
+								onChange={inputHandler()}
 							/>
 							<FontAwesomeIcon className={focused && value ? 'searchAnimation' : ''} icon={faMagnifyingGlassLocation}/>
 							<div className={focused && value ? "dropDownMenuActive" : "dropDownMenuNone"}>
@@ -399,12 +408,7 @@ const Weather = () => {
 									geo[0].map(item => (
 										<div 
 											className="dropDownMenuPlaces"
-											onClick={()=> {
-												setLat(item.lat)
-												setLon(item.lon)
-												setValue('')
-												onBlur()
-											}}
+											onClick={placeSelectHandler(item)}
 										>
 											<FontAwesomeIcon icon={faLocationDot}/>
 											<span>{item.country}, {item.name}, {item.state}</span>
@@ -419,7 +423,7 @@ const Weather = () => {
 						</div>
 						<div 
 							className="currentLocatin"
-							onClick={()=> getCurrentLocatin()}
+							onClick={getCurrentLocatin()}
 						>
 							<FontAwesomeIcon icon={faLocationCrosshairs}/>
 						</div>

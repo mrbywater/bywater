@@ -39,7 +39,6 @@ const CurrencyConverter = () => {
 	const [firstAmount, setFirstAmount] = useState(1)
 	const [currencyMultipleF, setCurrencyMultipleF] = useState(1)
 
-	const [filtredSymbolsNamesS, setFiltredSymbolsNamesS] = useState(currencySymbolsNames)
 	const [secondInputValue, setSecondInputValue] = useState('United States Dollar')
 	const [secondInputShortCurrency, setSecondInputShortCurrency] = useState('USD')
 	const [secondInputFocused, setSecondInputFocused] = useState(false)
@@ -232,18 +231,6 @@ const CurrencyConverter = () => {
 								firstInputShortCurrency={firstInputShortCurrency}
 								secondInputShortCurrency={secondInputShortCurrency}
 							/>
-							<div>
-								<div className='graphicValues'>
-									<div>Min</div>
-									<div>Avg</div>
-									<div>Max</div>
-								</div>
-								<div className='graphicValues'>
-									<div>1</div>
-									<div>2</div>
-									<div>3</div>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>

@@ -16,15 +16,14 @@
 	width: 100%;
 	height: 15%;
 	position: relative;
-	
 }
 
 .searchContainer > div:first-child {
 	width: 20%;
 	height: 50%;
-    position: relative;
-    transition: .5s;
-    z-index: 1000;
+  position: relative;
+  transition: .5s;
+  z-index: 1000;
 }
 
 .searchInput {
@@ -36,7 +35,8 @@
 	padding: 0 45px 0 calc(5% + 5px);
 	font-size: 20px;
 	background-color: $bg-purple;
-	box-shadow: 1px 1px 1px 1px $mid-purple;
+	box-shadow: 1px 1px 1px 0.3px $black;
+	color: $text-color-on-bg;
 }
 
 .searchContainer > div:first-child > svg {
@@ -66,7 +66,7 @@
 	justify-content: center;
 	align-items: center;
 	z-index: 10000;
-	background-color: $bg-purple;
+	background-color: $low-bg;
 	box-shadow: 2px 2px 4px 1px $black;
 	cursor: pointer;
 }
@@ -79,6 +79,7 @@
 .currentLocatin > svg {
     width: 2rem;
     height: 2rem;
+    color: $black;
 }
 
 .dropDownMenuActive {
@@ -87,14 +88,14 @@
 	flex-direction: column;
 	position: absolute;
 	background-color: $bg-purple;
-	border: 2px solid #22222E;
+	border: 2px solid $black;
 	border-top: none;
 	max-height: 200px;
 	width: calc(105% + 50px);
 	z-index: 1000;
-	box-shadow: 1px 1px 1px 1px $mid-purple;
+	box-shadow: 1px 1px 1px 0.3px $black;
 	border-radius:0 0 25px 25px;
-	color: $black;
+	color: $text-color-on-bg;
 }
 
 .dropDownMenuNone {
@@ -111,12 +112,13 @@
 	opacity: .8;
 	cursor: pointer;
 	border-radius: 10px;
-	transition: .3s;
+	transition: .2s;
 	padding: 5px 0;
 }
 
 .dropDownMenuPlaces:hover {
-	background-color: $white;
+	background-color: $weaher-search-hover;
+	color: $black;
 }
 
 .dropDownMenuPlaces > svg {
@@ -254,7 +256,7 @@
 .forecastContainer > div > div:first-child {
 	font-weight: bold;
 	height: 10%;
-
+	color: $text-color-on-bg;
 }
 
 .forecastContainer > div > div:last-child {
@@ -350,7 +352,7 @@
 .windAndSunsetContainer > div:first-child {
 	display: flex;
 	flex-direction: column;
-	background-color: $low-purple;
+	background-color: $low-bg;
 	height: calc(60% - 30px);;
 	width: calc(100% - 30px);
 	margin: 15px;
@@ -482,7 +484,7 @@
 	display: flex;
 	flex-direction: column;
 	width: 50%;
-	background-color: $low-purple;
+	background-color: $low-bg;
 	height: calc(100% - 30px);;
 	width: calc(100% - 30px);
 	margin: 15px;
@@ -541,8 +543,9 @@
 }
 
 .timeLineContainer > div > div:first-child {
-    font-weight: bold;
+  font-weight: bold;
 	height: 20%;
+	color: $text-color-on-bg;
 }
 
 .timeLineContainer > div > div:last-child {

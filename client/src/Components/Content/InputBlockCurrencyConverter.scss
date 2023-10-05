@@ -72,7 +72,7 @@
 	width: 80px;
 	padding: 3px;
 	height: 40px;
-	background-color: $bg-purple;
+	background-color: $lite-bg-cc;
 	left: 10px;
 	top: calc(50% - 23px);
 	display: flex;
@@ -87,7 +87,7 @@
 .currencySearch > div:last-child {
 	width: 100%;
 	max-height: 200px;
-	background-color: $bg-purple;
+	background-color: $lite-bg-cc;
 	border: 1px solid $black;;
 	top: 105%;
 	border-radius: 5px;
@@ -196,32 +196,6 @@
 .fastCurrency > div:hover {
 	background-color: #cbc9d1;
 	color: $dark-purple;
-}
-
-.currencySwap {
-	justify-content: center;
-  align-items: center;
-	background-color: $bg-purple;
-	box-shadow: 2px 2px 4px 1px $black;
-	cursor: pointer;
-	width: 2.5rem;
-	height: 2.5rem;
-}
-
-.currencySwap:active {
-	box-shadow: inset 2px 2px 4px 1px $black;
-	opacity: .8;
-}
-
-.currencySwap > svg {
-	width: 50%;
-	height: 50%;
-}
-
-.converterContainer > div:last-child {
-	height: 25%;
-	justify-content: center;
-	align-items: center;
 }
 
 .tooltip {

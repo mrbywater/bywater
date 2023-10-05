@@ -34,6 +34,8 @@ const GraficCurrencyConverter = (props) => {
 		secondInputShortCurrency
 	} = props
 
+	const [value, setValue] = useState([])
+
 	const options = {
 	  responsive: true,
 	  plugins: {
@@ -48,7 +50,10 @@ const GraficCurrencyConverter = (props) => {
 
 	const labels = datesArr.map(dates => moment(dates).format('MMM'));
 
-	const [value, setValue] = useState([])
+	const minValue = Math.min(...value) 
+	const sum = value.reduce((a, b) => a + b, 0);
+	const avgValue = (sum / value.length) || 0;
+	const maxValue = Math.max(...value) 
 
 	useMemo(()=> {
 		setValue(graficValues.map(item => (
@@ -69,9 +74,23 @@ const GraficCurrencyConverter = (props) => {
 	};
 
 	return (
-		<div className="graficContainer">
-			<Line options={options} data={data} />
-		</div>
+		<>
+			<div className="graficValuesContainer">
+				<Line options={options} data={data} />
+			</div>
+			<div>
+				<div className='graphicAmount'>
+					<div>Min</div>	
+					<div>Avg</div>
+					<div>Max</div>
+				</div>
+				<div className='graphicAmount'>
+					<div>{(minValue + '').slice(0,11)}</div>
+					<div>{(avgValue + '').slice(0,11)}</div>
+					<div>{(maxValue + '').slice(0,11)}</div>
+				</div>
+			</div>
+		</>
 	)
 }
 
