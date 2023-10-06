@@ -7,6 +7,7 @@
 	color: $white;
 	display: flex;
 	justify-content: space-between;
+	position: relative;
 }
 
 .headerLogo {
@@ -107,6 +108,61 @@
 	color: $white;
 }
 
+.bm-burger-button {
+  position: absolute;
+  width: 36px;
+  height: 30px;
+  left: 36px;
+  top: 36px;
+}
+
+.bm-burger-bars {
+  background: $low-purple;
+}
+
+.bm-burger-bars-hover {
+  opacity: .7;
+  transition: .2s;
+}
+
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+.bm-cross {
+  background: #bdc3c7;
+}
+
+.bm-menu-wrap {
+  position: fixed;
+  height: 100%;
+}
+
+.bm-menu {
+  background: #373a47;
+  padding: 2.5em 1.5em 0;
+  font-size: 1.15em;
+  overflow: hidden !important;
+}
+
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+.bm-item-list {
+  color: #b8b7ad;
+  padding: 0.8em;
+}
+
+.bm-item {
+  display: inline-block;
+}
+
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 @keyframes rotateSun {
  
   0% {
@@ -135,5 +191,33 @@
   100% {
     transform: rotate(0deg);
   }
+}
+
+@media (max-width: 1280px) {
+
+	.headerLogo {
+		position: absolute;
+		top: 10px;
+		left: 20px;
+	}
+
+	.headerLogo img {
+		height: 70px;
+	}
+
+	.buttonsHeaderContainer {
+		width: 100%;
+		margin-top: 60px;
+	}
+
+	.buttonsHeaderContainer > a {
+		flex-direction: row;
+		margin: 15px 0;
+	}
+
+	.buttonsHeaderLabel {
+		margin-right: 5px;
+	}
+
 }
 

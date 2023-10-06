@@ -23,7 +23,6 @@
 	height: 50%;
   position: relative;
   transition: .5s;
-  z-index: 1000;
 }
 
 .searchInput {
@@ -65,7 +64,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 10000;
 	background-color: $low-bg;
 	box-shadow: 2px 2px 4px 1px $black;
 	cursor: pointer;
