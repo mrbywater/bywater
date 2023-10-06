@@ -92,7 +92,7 @@
 }
 
 .educationContainer > div:last-child {
-	height: 400px;
+	margin-top: 20px;
 	display: flex;
 	border-radius: 3px;
 }
@@ -105,8 +105,6 @@
 }
 
 .educationContainerImg img{
-	min-width: 100px;
-    max-width: 100%;
     height: 300px;
     margin-left: 10%;
     border-radius: 20%;
@@ -235,10 +233,10 @@
 	display: flex;
 	margin-top: 30px;
 	align-items: center;
+	position: relative;
 }
 
 .aboutMeContainer > div:last-child > div {
-	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -262,6 +260,10 @@
 
 .aboutMeContainer > div:last-child > div:last-child{
 	width: 30%;
+}
+
+.infoButtonsMobile {
+	display: none;
 }
 
 .infoButtons {
@@ -317,4 +319,141 @@
 .infoButtons > div:last-child > a:hover {
 	background-color: #0a66c2;
 	color: $theme-background;
+}
+
+@media (max-width: 1030px) {
+
+	.personContainer {
+		min-height: 60vh;
+		padding: 20px 0;
+	}
+
+	.personContainer > div:first-child span:first-child {
+		font-size: 4rem;
+	}
+
+	.personContainer > div:first-child span:last-child {
+		font-size: 2rem;
+	}
+
+	.educationContainer > div:last-child {
+		flex-direction: column-reverse;
+		align-items: center;
+	}
+
+	.educationContainer > div:last-child > div {
+		width: 100%;
+		justify-content: center;
+		margin-top: 20px;
+	}
+
+	.educationContainerImg img {
+		margin-left: 0;
+		height: initial;
+		width: 80%;
+	}
+
+	.worksContainer {
+		min-height: 600px;
+	}
+
+	.worksContainer > div:first-child {
+		margin-top: 10px;
+	}
+
+	.worksBackground > div {
+		flex-direction: column;
+	}
+
+	.worksBackground > div > div:first-child {
+		margin-bottom: 20px;
+		width: 80%;
+	}
+
+	.worksBackground > div > div:first-child span {
+		padding: 5px 0;
+		
+	}
+
+	.worksBackground > div > div:last-child {
+		width: 70%;
+	}
+
+	video {
+		height: 100%;
+	}
+
+	.aboutMeContainer > div:last-child > div:first-child {
+		width: calc(100% - 40px);
+		position: relative;
+		padding: 30px 20px;
+	}
+
+	.aboutMeContainer > div:last-child > div:first-child > span {
+		font-size: 1rem;
+	}
+
+	.aboutMeContainer > div:last-child > div:last-child {
+		display: none;
+	}
+
+	.infoButtonsMobile {
+		display: flex;
+		position: absolute;
+		right: 10px;
+		bottom: 5px;
+	}
+
+	.infoButtonsMobile > div {
+		width: 30px;
+		height: 30px;
+		margin-left: 20px;
+	}
+
+	.infoButtonsMobile > div > a > svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.infoButtonsMobile > div:first-child > a > svg {
+		color: black;
+	}
+
+	.infoButtonsMobile > div:last-child > a > svg {
+		color: #0a66c2;
+	}
+
+}
+
+@media (max-width: 750px) {
+
+	.personContainer {
+		min-height: 20vh;
+	}
+
+	.personContainer > div:first-child span:first-child {
+		font-size: 2rem;
+	}
+
+	.personContainer > div:first-child span:last-child {
+		font-size: 1rem;
+	}
+
+	.selectedSkill {
+		min-width: 22%;
+		max-width: 29%;
+	}
+
+	.educationContainerDescp > span {
+		font-size: 1.5rem;
+	}
+
+	.educationContainerDescpTable > div span {
+		font-size: 0.9rem;
+	}
+
+	.educationContainerDescpTable {
+		width: 95%;
+	}
+
 }

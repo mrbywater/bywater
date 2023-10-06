@@ -34,13 +34,8 @@ const Header = () => {
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [isOpen, setOpen] = useState(false)
 
-	const handleIsOpen = () => {
-		setOpen(!isOpen)
-	}
-
-	const closeSideBar = () => {
-		setOpen(false)
-	}
+	const handleIsOpen = () => setOpen(!isOpen)
+	const closeSideBar = () => setOpen(false)
 			
 	const switcherPosition = !switcher ? "35px" : ''
 

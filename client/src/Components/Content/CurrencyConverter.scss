@@ -164,3 +164,27 @@
     transform: rotate(0deg);
   }
 }
+
+@media (max-width: 1100px) {
+
+	.currencyConverterContainer {
+		align-items: center;
+		justify-content: space-evenly;
+		flex-direction: column;
+		min-height: 900px;
+	}
+
+	.currencyConverterContainer > div {
+		width: 80%;
+		height: 400px;
+	}
+
+}
+
+@media (max-width: 650px) {
+
+	.currencyConverterContainer > div {
+		width: 100%;
+	}
+
+}
