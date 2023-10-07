@@ -12,9 +12,9 @@ function App() {
     <>
       <Header/>
       <Routes>
-        <Route path="bywater/" element={<Home />}/>
-        <Route path="bywater/weather" element={<Weather />}/>
-        <Route path="bywater/currency-converter" element={<CurrencyConverter />}/>
+        <Route path="/" element={<Home />}/>
+        <Route path="/weather" element={<Weather />}/>
+        <Route path="/currency-converter" element={<CurrencyConverter />}/>
         <Route path="*" element={<NotFoundPage />}/>
       </Routes>
       <Footer/>
