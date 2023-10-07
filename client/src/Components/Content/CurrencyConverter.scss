@@ -183,8 +183,76 @@
 
 @media (max-width: 650px) {
 
+	.currencyConverterContainer {
+		min-height: 1350px;
+	}
+
 	.currencyConverterContainer > div {
 		width: 100%;
+		height: 650px;
+	}
+
+	.converterContainer > div:first-child {
+		flex-direction: column;
+		height: 80%;
+	}
+
+	.converterContainer > div:last-child {
+		height: 10%;
+	}
+
+	.converterContainer > div:first-child > div:nth-child(1), 
+	.converterContainer > div:first-child > div:nth-child(3) {
+		width: 100%;
+		height: 45%;
+	}
+
+	.dateChangerContainer {
+		width: 95%;
+		justify-content: center;
+	}
+
+	.dateChangerContainer > div {
+		width: 140px;
+	}
+
+	.dateChangerContainer > div > div > div {
+		width: 140px;
+	}
+
+	.dateChangerContainer input {
+		width: 100px;
+	}
+
+	.graficValuesContainer {
+		height: 40% !important;
+	}
+
+	.graphicContainer > div > div:last-child {
+		height: 40%;
+		flex-direction: row;
+	}
+
+	.graphicAmount {
+		flex-direction: column;
+		align-items: center;
+		height: 100%;
+	}
+
+	.graphicAmount > div {
+		flex: 1;
+		width: 100% !important;
+	}
+
+	.graphicAmount > div:nth-child(2) {
+		border-left: none !important;
+		border-right: none !important;
+		border-top: 1px solid $dark-purple !important;
+		border-bottom: 1px solid $dark-purple !important;
+	}
+
+	.graphicAmount:first-child {
+		border-bottom: none !important;
 	}
 
 }

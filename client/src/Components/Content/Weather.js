@@ -31,92 +31,93 @@ import {
 	faSmog,
 	faCloudRain
 } from "@fortawesome/free-solid-svg-icons";
+import Slider from 'infinite-react-carousel';
 import SunCalc from "suncalc"
 
-	const thunderstorm = [
-			200,	
-			201,	
-			202,	
-			210,	
-			211,	
-			212,	
-			221,	
-			230,	
-			231,	
-			232
-		]
+const thunderstorm = [
+		200,	
+		201,	
+		202,	
+		210,	
+		211,	
+		212,	
+		221,	
+		230,	
+		231,	
+		232
+	]
 
-		const drizzle = [
-			300, 
-			301, 
-			302, 
-			310, 
-			311, 	
-			312, 
-			313, 
-			314,  
-			321 
-		]
+	const drizzle = [
+		300, 
+		301, 
+		302, 
+		310, 
+		311, 	
+		312, 
+		313, 
+		314,  
+		321 
+	]
 
-		const rain = [
-			500,
-			501,
-			502,
-			503,
-			504
-		]
+	const rain = [
+		500,
+		501,
+		502,
+		503,
+		504
+	]
 
-		const rainSnow = [
-			511
-		]
+	const rainSnow = [
+		511
+	]
 
-		const rainCloud = [
-			520,
-			521,
-			522,
-			531
-		]
+	const rainCloud = [
+		520,
+		521,
+		522,
+		531
+	]
 
-		const snow = [
-			600,	
-			601,	
-			602,	
-			611,	
-			612,	
-			613,
-			615,	
-			616,
-			620,	
-			621,
-			622	
-		]
+	const snow = [
+		600,	
+		601,	
+		602,	
+		611,	
+		612,	
+		613,
+		615,	
+		616,
+		620,	
+		621,
+		622	
+	]
 
-		const atmosphere = [
-			701,	
-			711,	
-			721,	
-			731,	
-			741,	
-			751,	
-			761,
-			762,	
-			771,	
-			781	
-		]
+	const atmosphere = [
+		701,	
+		711,	
+		721,	
+		731,	
+		741,	
+		751,	
+		761,
+		762,	
+		771,	
+		781	
+	]
 
-		const clear = [
-			800
-		]
+	const clear = [
+		800
+	]
 
-		const fewClouds = [
-			801
-		]
+	const fewClouds = [
+		801
+	]
 
-		const clouds = [
-			802,
-			803,
-			804
-		]
+	const clouds = [
+		802,
+		803,
+		804
+	]
 
 const Weather = () => {
 
@@ -136,6 +137,7 @@ const Weather = () => {
 	const [value, setValue] = useState('')
 	const [lat, setLat] = useState(currentLat ? currentLat : '50.4500336')
 	const [lon, setLon] = useState(currentLon ? currentLon : '30.5241361')
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	
 	const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
@@ -144,6 +146,19 @@ const Weather = () => {
 	const forecastMonth = {  day: 'numeric', month: 'short'}
 	const forecastWeekday = { weekday: 'short' }
 	const timeNow = moment().format('HH:MM')
+
+	const searchActiveWidth = windowWidth > 1200 ? '25%' : '40%'
+
+	const sliderSettings =  {
+      arrows: false,
+      arrowsBlock: false,
+      autoplay: true,
+      autoplaySpeed: 4000,
+      dots: true,
+      duration: 300,
+      dotsScroll: windowWidth < 500 ? 2 : 3,
+      slidesToShow: windowWidth < 500 ? 2 : 3
+    };
 
 	const weatherAPI = async () => {
 		try {
@@ -373,6 +388,7 @@ const Weather = () => {
 				).reverse()
 			)
 		}
+
 	}, [forecastWeather])
 
 	useEffect(()=> {
@@ -384,15 +400,17 @@ const Weather = () => {
 
 		document.addEventListener('click', handleClickOutside);
 
+		window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
+
 	}, [])
 
-	if (currentWeather && forecastWeather && airPollution) {
+	if (currentWeather && forecastWeather && airPollution && soonW.length) {
 		return (
 			<div className="mainContainerContent">
 				<div className="weatherContainer">
 					<div className="searchContainer">
 						<div 
-							style={focused ? {width: "25%"} : {}} 
+							style={focused ? {width: searchActiveWidth} : {}} 
 							ref={dropDownRef}
 						>
 							<input 
@@ -613,34 +631,66 @@ const Weather = () => {
 											Weather soon
 										</span>
 									</div>
-									<div>
-										{soonW.map(item =>
-											<div className="weatherSoonContainer" key={`soonW_${item.dt_txt}`}>
-												<div>
-													<div>{item.dt_txt.slice(10, 16)}</div>
-													<div className="weatherSoonInfoContainer">
-														<div>
-															<FontAwesomeIcon 
-																style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}}	
-																icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
-															/>
+									{windowWidth > 900 ? (
+										<div className="weatherSoonMainContainer">
+											{soonW.map(item =>
+												<div className="weatherSoonContainer" key={`soonW_${item.dt_txt}`}>
+													<div>
+														<div>{item.dt_txt.slice(10, 16)}</div>
+														<div className="weatherSoonInfoContainer">
 															<div>
-																<span>{Math.floor(item.main.temp)}</span>
-																<span id="soonWCelsius">°C</span>
+																<FontAwesomeIcon 
+																	style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}}	
+																	icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
+																/>
+																<div>
+																	<span>{Math.floor(item.main.temp)}</span>
+																	<span id="soonWCelsius">°C</span>
+																</div>
 															</div>
-														</div>
-														<div>
-															<FontAwesomeIcon icon={faLocationArrow} style={{transform: `rotate(${135+item.wind.deg}deg)`}}/>
 															<div>
-																<span>{Math.floor(item.wind.speed * 10) / 10}</span>
-																<span>s/m</span>
+																<FontAwesomeIcon icon={faLocationArrow} style={{transform: `rotate(${135+item.wind.deg}deg)`}}/>
+																<div>
+																	<span>{Math.floor(item.wind.speed * 10) / 10}</span>
+																	<span>s/m</span>
+																</div>
 															</div>
 														</div>
 													</div>
 												</div>
-											</div>
-										)}
-									</div>	
+											)}
+										</div>
+										
+									) : (
+										<Slider { ...sliderSettings }>
+											{soonW.map(item =>
+												<div className="weatherSoonContainer" key={`soonW_${item.dt_txt}`}>
+													<div>
+														<div>{item.dt_txt.slice(10, 16)}</div>
+														<div className="weatherSoonInfoContainer">
+															<div>
+																<FontAwesomeIcon 
+																	style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}}	
+																	icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
+																/>
+																<div>
+																	<span>{Math.floor(item.main.temp)}</span>
+																	<span id="soonWCelsius">°C</span>
+																</div>
+															</div>
+															<div>
+																<FontAwesomeIcon icon={faLocationArrow} style={{transform: `rotate(${135+item.wind.deg}deg)`}}/>
+																<div>
+																	<span>{Math.floor(item.wind.speed * 10) / 10}</span>
+																	<span>s/m</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											)}
+										</Slider>
+									)}
 								</div>
 							</div>
 						</div>

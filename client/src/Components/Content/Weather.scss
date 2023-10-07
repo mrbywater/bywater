@@ -467,6 +467,7 @@
 	flex-direction: column;
 	justify-content: center;
 	font-weight: bold;
+	padding-right: 5px;
 }
 
 .sunsetContainer > div:last-child > div > div > span:first-child {
@@ -537,34 +538,34 @@
 	height: calc(100% - 30px);;
 	width: calc(100% - 30px);
 	margin: 15px;
-	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .timeLineContainer > div > div:first-child {
   font-weight: bold;
 	height: 20%;
 	color: $text-color-on-bg;
+	display: flex;
+	align-items: center;
 }
 
-.timeLineContainer > div > div:last-child {
+.weatherSoonMainContainer {
 	height: 80%;
 	display: flex;
 	justify-content: space-between;
 }
 
-.timeLineContainer > div > div:last-child > div {
-	width: 11%;
-	height: 100%;
-	background-color: $mid-purple;
-	border-radius: 10px;
-}
-
 .weatherSoonContainer {
-	display: flex;
+	display: flex !important;
 	justify-content: center;
 	align-items: center;
 	font-weight: bold;
 	font-size: 14px;
+	width: 11%;
+	background-color: $mid-purple;
+	border-radius: 10px;
 }
 
 .weatherSoonContainer > div {
@@ -660,4 +661,156 @@
   100% {
     transform: rotate(0deg);
   }
+}
+
+@media (max-width: 1200px) {
+
+	.weatherContainer {
+		height: 900px;
+	}
+
+	.searchContainer {
+		height: 11%;
+	}
+
+	.searchContainer > div:first-child {
+		width: 35%;
+		margin-left: 15px;
+	}
+
+	.weatherContainer > div {
+		flex-direction: column;
+	}
+
+	.weatherContainer > div:first-child {
+		align-items: baseline;
+		justify-content: inherit;
+	}
+
+	.weatherInfoContainer > div:first-child {
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 36%;
+	}
+
+	.weatherInfoContainer > div:first-child > div {
+		height: 100%;
+	}
+
+	.weatherInfoContainer > div:last-child {
+		width: 100%;
+		flex-direction: column-reverse;
+	}
+
+}
+
+@media (max-width: 900px) { 
+
+	.weatherContainer {
+		height: 1500px;
+		justify-content: space-evenly;
+	}
+
+	.searchContainer {
+		height: 6%;
+	}
+
+	.searchContainer > div:first-child {
+		width: 35%;
+	}
+
+	.weatherSoonContainer {
+		width: calc(100% - 20px) !important;
+		margin: 0 10px;
+	}
+
+	.carousel-initialized {
+		border-radius: 10px;
+	}
+
+	.fullInfoContainer > div > div:nth-child(2) {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.fullInfoContainer > div > div:nth-child(2) > div {
+		height: 50%;
+		width: 97%;
+	}
+
+}
+
+@media (max-width: 500px) { 
+
+	.weatherContainer {
+		height: 2500px;
+		justify-content: space-evenly;
+	}
+
+	.searchContainer {
+		height: 4%;
+	}
+
+	.weatherInfoContainer > div:first-child {
+		flex-direction: column;
+	}
+
+	.windAndSunsetContainer > div:last-child {
+		flex-direction: column;
+	}
+
+	.windAndSunsetContainer > div:last-child > div {
+		    height: calc(50% - 30px);
+	}
+
+	.windContainer > div:last-child {
+		flex-direction: column;
+		position: relative;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.windContainer > div:last-child > svg {
+		position: absolute;
+		left: 10px;
+	}
+
+	.windContainer > div:last-child > div {
+		flex-direction: row;
+		border-left: none;
+	}
+
+	.windContainer > div:last-child > div span {
+		margin-right: 5px;
+	}
+
+	.timeLineContainer {
+		height: 20%;
+	}
+
+	.fullInfoContainer {
+		height: 80%;
+	}
+
+	.fullInfoContainer > div > div:nth-child(1) {
+		height: 5%;
+	}
+
+	.sunsetContainer > div:first-child {
+		height: 20%;
+	}
+
+	.sunsetContainer > div:last-child {
+		flex-direction: column;
+		align-items: center;
+		height: 75%;
+	}
+
+	.sunsetContainer > div:last-child > div {
+		width: 90%;
+    height: 40%;
+	}
+
 }

@@ -94,6 +94,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	overflow: auto;
+	z-index: 999999;
 }
 
 .currencySearch > div:last-child::-webkit-scrollbar {
