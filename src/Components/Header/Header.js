@@ -81,7 +81,7 @@ const Header = () => {
 				    onClose={handleIsOpen}
 			    >
 					<div className="headerLogo">
-						<Link to={'/'}> 
+						<Link to={'bywater/'}> 
 							<img src={Logo} alt="logo" onClick={closeSideBar}/>
 						</Link>		
 					</div>
@@ -117,7 +117,7 @@ const Header = () => {
 			</div>
 			<div className="buttonsHeaderContainer">
 				{headerButtons.map(i =>
-					<Link to={i.name === "Home" ? "/" : linkConvert(i.name)} key={`name_${i.name}`}> 
+					<Link to={i.name === "Home" ? "bywater/" : `bywater/${linkConvert(i.name)}`}> 
 						<div className="buttonsHeaderLabel">
 							<FontAwesomeIcon icon={i.label} style={((i.name === "Home" ? '' : linkConvert(i.name)) === location) ? {color: i.selectColor} : ''}/>
 						</div>
