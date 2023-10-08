@@ -164,7 +164,7 @@ const Weather = () => {
 		try {
 		    const resCW = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
 		    const resF = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
-		    const resA = await axios.get(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+		    const resA = await axios.get(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`)
 		    
 		    return (
 		    	setCurrentWeather([resCW.data]),
@@ -178,7 +178,7 @@ const Weather = () => {
 
 	const geoAPI = async () => {
 		try {
-		    const resGeo = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${placeName ? placeName : ' '}&limit=5&appid=${apiKey}`)
+		    const resGeo = await axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${placeName ? placeName : ' '}&limit=5&appid=${apiKey}`)
 		    
 		    return (
 		    	setGeo([resGeo.data])

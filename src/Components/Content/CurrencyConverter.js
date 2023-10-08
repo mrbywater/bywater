@@ -57,7 +57,7 @@ const CurrencyConverter = () => {
 		try {
 		    const resS = await axios.get(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
 		    const resC = await axios.get(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
-		    
+		    console.log(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
 		    return (	
 		    	setCurrencySymbols([resS.data.symbols]),
 		    	setConvertCurrency([resC.data])
