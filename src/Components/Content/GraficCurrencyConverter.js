@@ -59,7 +59,7 @@ const GraficCurrencyConverter = (props) => {
 		setValue(graficValues.map(item => (
 				item.rates[secondInputShortCurrency].rate
 		)))
-	}, [graficValues])
+	}, [graficValues, firstInputShortCurrency])
 
 	const data = {
 	  labels,
