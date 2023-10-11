@@ -767,7 +767,7 @@
 	}
 
 	.windAndSunsetContainer > div:last-child > div {
-		    height: calc(50% - 30px);
+		height: calc(50% - 30px);
 	}
 
 	.windContainer > div:last-child {
@@ -779,12 +779,13 @@
 
 	.windContainer > div:last-child > svg {
 		position: absolute;
-		left: 10px;
+		left: 10%;
 	}
 
 	.windContainer > div:last-child > div {
 		flex-direction: row;
 		border-left: none;
+		margin-left: 25%;
 	}
 
 	.windContainer > div:last-child > div span {
