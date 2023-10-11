@@ -7,7 +7,7 @@ const fastChoiceArr = [
 	'USD',
 	'EUR',
 	'UAH',
-	'BTC'
+	'JPY'
 ]
 
 const InputBlockCurrencyConverter = (props) => {
@@ -26,6 +26,8 @@ const InputBlockCurrencyConverter = (props) => {
 
 	const inputRef = useRef();
 	const isFocused = useRef();
+
+
 
 	const [filtredSymbolsNames, setFiltredSymbolsNames] = useState(currencySymbolsNames)
 
@@ -104,7 +106,7 @@ const InputBlockCurrencyConverter = (props) => {
 				{inputFocused &&
 					<div>
 						{filtredSymbolsNames.length ? (
-							filtredSymbolsNames.map(item => (
+							filtredSymbolsNames.sort().map(item => (
 								<div 
 									className="selectedCurrency"
 									onClick={handlerChangeCurrency(setInputFocused, setInputValue, setInputShortCurrency, item)}

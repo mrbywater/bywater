@@ -61,7 +61,7 @@ const Home = () => {
 			<div className="personContainer">
 				<div>
 					<span><b>Melnik</b> Nick</span>
-					<span>beginning IT developer</span>
+					<span>React developer</span>
 				</div>
 				<div>
 					<img src={require('../../Images/doflamingo.jpg')} alt="myPhoto"/>

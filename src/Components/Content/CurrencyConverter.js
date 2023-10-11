@@ -13,18 +13,11 @@ import "react-multi-date-picker/styles/layouts/mobile.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import { Loader } from './Loader.js'
 
-const fastChoiceArr = [
-	'USD',
-	'EUR',
-	'UAH',
-	'BTC'
-]
-
 const CurrencyConverter = () => {
 
 	const datePickerRef = useRef();
 
-	const apiKey = '67d05cb1b5e4e170c3ef7b4ca60cd9c5'
+	const apiKey = 'd235c21d0b78818653feef36b9149cc49272039f'
 
 	const [dateValue, setDateValue] = useState(new Date(Date.now()-86400000))
 	const [rightFormatDate, setRightFormatDate] = useState(moment(dateValue).format("YYYY-MM-DD"))
@@ -33,14 +26,14 @@ const CurrencyConverter = () => {
 	const [currencySymbolsNames, setCurrencySymbolsNames] = useState([])
 	const [graficValues, setGraficValues] = useState(null)
 
-	const [firstInputValue, setFirstInputValue] = useState('Euro')
-	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState('EUR')
+	const [firstInputValue, setFirstInputValue] = useState('United States Dollar')
+	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState('USD')
 	const [firstInputFocused, setFirstInputFocused] = useState(false)
 	const [firstAmount, setFirstAmount] = useState(1)
 	const [currencyMultipleF, setCurrencyMultipleF] = useState(1)
 
-	const [secondInputValue, setSecondInputValue] = useState('United States Dollar')
-	const [secondInputShortCurrency, setSecondInputShortCurrency] = useState('USD')
+	const [secondInputValue, setSecondInputValue] = useState('Euro')
+	const [secondInputShortCurrency, setSecondInputShortCurrency] = useState('EUR')
 	const [secondInputFocused, setSecondInputFocused] = useState(false)
 	const [secondAmount, setSecondAmount] = useState(1)
 	const [currencyMultipleS, setCurrencyMultipleS] = useState(1)
@@ -50,16 +43,17 @@ const CurrencyConverter = () => {
 	).reverse()
 
 	const graficUrlCreator = datesArr.map(dates => (
-		axios.get(`http://data.fixer.io/api/${dates}?access_key=${apiKey}&symbols=${firstInputShortCurrency},${secondInputShortCurrency}&format=1`)
+		axios.get(`https://api.getgeoapi.com/v2/currency/historical/${dates}?api_key=${apiKey}&from=${firstInputShortCurrency}&to=${secondInputShortCurrency}`)
 	))
 
 	const currrencyAPI = async () => {
 		try {
-		    const resS = await axios.get(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
-		    const resC = await axios.get(`http://data.fixer.io/api/${rightFormatDate}?access_key=${apiKey}&format=1`)
-		    console.log(`http://data.fixer.io/api/symbols?access_key=${apiKey}`)
+
+		    const resS = await axios.get(`https://api.getgeoapi.com/v2/currency/list?api_key=${apiKey}`)
+		    const resC = await axios.get(`https://api.getgeoapi.com/v2/currency/historical/${rightFormatDate}?api_key=${apiKey}`)
+
 		    return (	
-		    	setCurrencySymbols([resS.data.symbols]),
+		    	setCurrencySymbols([resS.data.currencies]),
 		    	setConvertCurrency([resC.data])
 		    )
 		  } catch (err) {
@@ -126,8 +120,8 @@ const CurrencyConverter = () => {
 	useMemo(()=> {
 
 		if (convertCurrency) {
-			setCurrencyMultipleF(convertCurrency[0].rates[firstInputShortCurrency])
-			setCurrencyMultipleS(convertCurrency[0].rates[secondInputShortCurrency])
+			setCurrencyMultipleF(convertCurrency[0].rates[firstInputShortCurrency].rate)
+			setCurrencyMultipleS(convertCurrency[0].rates[secondInputShortCurrency].rate)
 		}	
 
 	}, [firstInputShortCurrency, secondInputShortCurrency, convertCurrency])
@@ -197,7 +191,7 @@ const CurrencyConverter = () => {
 						</div>
 						<div>
 							<div className="dateChangerContainer">
-								<span onClick={()=>console.log(graficValues)}>
+								<span>
 									Date
 								</span>
 								<DatePicker 

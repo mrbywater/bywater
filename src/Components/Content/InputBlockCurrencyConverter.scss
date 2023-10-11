@@ -4,7 +4,7 @@
 	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
-	width: 43%;
+	width: 45%;
 	height: 90%;
 }
 
@@ -78,7 +78,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 1.5rem;
+	font-size: 1.3rem;
 	font-weight: bold;
 	border-radius: 30px;
 	user-select: none;
@@ -141,12 +141,12 @@
 .selectedCurrency > span:first-child {
 	width: 30%;
 	font-weight: bold;
-	font-size: 1.5rem;
+	font-size: 1.3rem;
 }
 
 .selectedCurrency > span:last-child {
 	width: 60%;
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 }
 
 .selectedCurrencyNoItems {

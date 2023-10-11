@@ -51,13 +51,13 @@ const GraficCurrencyConverter = (props) => {
 	const labels = datesArr.map(dates => moment(dates).format('MMM'));
 
 	const minValue = Math.min(...value) 
-	const sum = value.reduce((a, b) => a + b, 0);
+	const sum = value.reduce((a, b) => +a + +b, 0);
 	const avgValue = (sum / value.length) || 0;
 	const maxValue = Math.max(...value) 
 
 	useMemo(()=> {
 		setValue(graficValues.map(item => (
-				item.rates[secondInputShortCurrency]/item.rates[firstInputShortCurrency]
+				item.rates[secondInputShortCurrency].rate
 		)))
 	}, [graficValues])
 
