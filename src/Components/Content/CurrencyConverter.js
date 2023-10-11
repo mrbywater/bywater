@@ -115,7 +115,7 @@ const CurrencyConverter = () => {
 
 		graficAPI()	
 
-	}, [rightFormatDate, firstInputShortCurrency, secondInputShortCurrency])
+	}, [rightFormatDate])
 
 	useMemo(()=> {
 
