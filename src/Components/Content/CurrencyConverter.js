@@ -199,7 +199,7 @@ const CurrencyConverter = () => {
 									className="rmdp-mobile bg-dark"
 								    value={dateValue}
 								    onChange={setDateValue}
-								    minDate={new Date('Jan 1, 2000')}
+								    minDate={new Date('Jan 1, 2010')}
 								    maxDate={new Date(Date.now()-86400000)}
 								    mobileButtons={[
 								      {
