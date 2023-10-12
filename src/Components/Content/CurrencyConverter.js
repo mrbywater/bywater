@@ -25,6 +25,7 @@ const CurrencyConverter = () => {
 	const [currencySymbols, setCurrencySymbols] = useState(null)
 	const [currencySymbolsNames, setCurrencySymbolsNames] = useState([])
 	const [graficValues, setGraficValues] = useState(null)
+	const [dates, setDates] = useState(Array.from({ length: 3 }, (item, index) => (moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))).reverse())
 
 	const [firstInputValue, setFirstInputValue] = useState('United States Dollar')
 	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState('USD')
@@ -37,14 +38,6 @@ const CurrencyConverter = () => {
 	const [secondInputFocused, setSecondInputFocused] = useState(false)
 	const [secondAmount, setSecondAmount] = useState(1)
 	const [currencyMultipleS, setCurrencyMultipleS] = useState(1)
-
-	const datesArr = Array.from({ length: 3 }, (item, index) => (
-		moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))
-	).reverse()
-
-	const graficUrlCreator = datesArr.map(dates => (
-		axios.get(`https://api.getgeoapi.com/v2/currency/historical/${dates}?api_key=${apiKey}&from=${firstInputShortCurrency}&to=${secondInputShortCurrency}`)
-	))
 
 	const currrencyAPI = async () => {
 		try {
@@ -63,6 +56,15 @@ const CurrencyConverter = () => {
 
 	const graficAPI = async () => {
 		try {
+
+			setDates(Array.from({ length: 3 }, (item, index) => (
+				moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))
+			).reverse())
+
+			const graficUrlCreator = dates.map(dates => (
+				axios.get(`https://api.getgeoapi.com/v2/currency/historical/${dates}?api_key=${apiKey}&from=${firstInputShortCurrency}&to=${secondInputShortCurrency}`)
+			))
+
 		    const res = await axios.all(graficUrlCreator)
 
 		    return(
@@ -72,7 +74,6 @@ const CurrencyConverter = () => {
 		    console.error(err.toJSON())
 		  }
 	}
-
 
 	const swapValues = () => {
 		setFirstInputShortCurrency(secondInputShortCurrency);
@@ -115,7 +116,7 @@ const CurrencyConverter = () => {
 
 		graficAPI()	
 
-	}, [rightFormatDate])
+	}, [rightFormatDate, firstInputShortCurrency, secondInputShortCurrency])
 
 	useMemo(()=> {
 
@@ -220,7 +221,7 @@ const CurrencyConverter = () => {
 					<div className="graphicContainer">
 						<div>
 							<GraficCurrencyConverter
-								datesArr={datesArr}
+								datesArr={dates}
 								graficValues={graficValues}
 								firstInputShortCurrency={firstInputShortCurrency}
 								secondInputShortCurrency={secondInputShortCurrency}

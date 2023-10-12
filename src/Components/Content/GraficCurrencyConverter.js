@@ -56,10 +56,10 @@ const GraficCurrencyConverter = (props) => {
 	const maxValue = Math.max(...value) 
 
 	useMemo(()=> {
-		setValue(graficValues.map(item => (
-				item.rates[secondInputShortCurrency].rate
-		)))
-	}, [graficValues, firstInputShortCurrency])
+			setValue(graficValues.map(item => (
+					item.rates[secondInputShortCurrency].rate
+			)))
+	}, [graficValues])
 
 	const data = {
 	  labels,
