@@ -24,7 +24,6 @@ const CurrencyConverter = () => {
 	const [convertCurrency, setConvertCurrency] = useState(null)
 	const [currencySymbols, setCurrencySymbols] = useState(null)
 	const [currencySymbolsNames, setCurrencySymbolsNames] = useState([])
-	const [dates, setDates] = useState(Array.from({ length: 3 }, (item, index) => (moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))).reverse())
 
 	const [firstInputValue, setFirstInputValue] = useState('United States Dollar')
 	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState('USD')
@@ -38,12 +37,10 @@ const CurrencyConverter = () => {
 	const [secondAmount, setSecondAmount] = useState(1)
 	const [currencyMultipleS, setCurrencyMultipleS] = useState(1)
 
+	const dates = Array.from({ length: 3 }, (item, index) => (moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))).reverse()
+
 	const currrencyAPI = async () => {
 		try {
-
-			setDates(Array.from({ length: 3 }, (item, index) => (
-				moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))
-			).reverse())
 
 			const graficUrlCreator = dates.map(dates => (
 				axios.get(`https://api.getgeoapi.com/v2/currency/historical/${dates}?api_key=${apiKey}`)
@@ -89,7 +86,7 @@ const CurrencyConverter = () => {
 
 	useEffect(()=> {
 		currrencyAPI()
-	}, [dates])
+	}, [rightFormatDate])
 
 	useEffect(()=> {
 		if (currencySymbols) {
