@@ -27,8 +27,6 @@ const InputBlockCurrencyConverter = (props) => {
 	const inputRef = useRef();
 	const isFocused = useRef();
 
-
-
 	const [filtredSymbolsNames, setFiltredSymbolsNames] = useState(currencySymbolsNames)
 
 	const fastChoiceCurrency = (item) => () => setInputShortCurrency(item)

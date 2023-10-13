@@ -1,6 +1,6 @@
 import './GraficCurrencyConverter.scss'
 import moment from 'moment'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -35,6 +35,17 @@ const GraficCurrencyConverter = (props) => {
 	} = props
 
 	const [value, setValue] = useState([])
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+	useMemo(()=> {
+			setValue(graficValues.map(item => (
+					item.rates[secondInputShortCurrency].rate/item.rates[firstInputShortCurrency].rate
+			)))
+	}, [firstInputShortCurrency, secondInputShortCurrency, graficValues])
+
+	 useEffect(() => {
+        window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
+    }, [])
 
 	const options = {
 	  responsive: true,
@@ -55,12 +66,6 @@ const GraficCurrencyConverter = (props) => {
 	const avgValue = (sum / value.length) || 0;
 	const maxValue = Math.max(...value) 
 
-	useMemo(()=> {
-			setValue(graficValues.map(item => (
-					item.rates[secondInputShortCurrency].rate/item.rates[firstInputShortCurrency].rate
-			)))
-	}, [firstInputShortCurrency, secondInputShortCurrency, graficValues])
-
 	const data = {
 	  labels,
 	  datasets: [
@@ -69,6 +74,7 @@ const GraficCurrencyConverter = (props) => {
 	      data: value,
 	      borderColor: 'rgb(57, 58, 90, 0.7)',
 	      backgroundColor: 'rgba(57, 58, 90, 0.4)',
+	      pointRadius: windowWidth <= 1100 ? 8 : 3,
 	    },
 	  ],
 	};
