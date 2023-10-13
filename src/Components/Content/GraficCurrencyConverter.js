@@ -57,9 +57,9 @@ const GraficCurrencyConverter = (props) => {
 
 	useMemo(()=> {
 			setValue(graficValues.map(item => (
-					item.rates[secondInputShortCurrency].rate
+					item.rates[secondInputShortCurrency].rate/item.rates[firstInputShortCurrency].rate
 			)))
-	}, [graficValues])
+	}, [firstInputShortCurrency, secondInputShortCurrency, graficValues])
 
 	const data = {
 	  labels,
