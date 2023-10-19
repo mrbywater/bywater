@@ -64,7 +64,7 @@ const Home = () => {
 					<span>React developer</span>
 				</div>
 				<div>
-					<img src={require('../../Images/doflamingo.jpg')} alt="myPhoto"/>
+					<img src={require('../../Images/myPhoto.jpg')} alt="myPhoto"/>
 				</div>
 			</div>
 			<div className="skillsContainer">
