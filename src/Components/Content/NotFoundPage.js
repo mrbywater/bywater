@@ -1,6 +1,7 @@
 import './Main.scss'
 
 const NotFoundPage = () => {
+	
 	return (
 		<div className="mainContainerContent NotFoundPage">
 			<div className="NotFoundPage">
@@ -9,6 +10,7 @@ const NotFoundPage = () => {
 			</div>
 		</div>
 	)
+	
 }
 
 export {NotFoundPage}

@@ -381,11 +381,12 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: 70px;
-	height: 50%;
+	height: 23px;
 	font-size: 14px;
 	font-weight: bold;
 	padding: 0 10px;
 	min-width: 40px;
+	white-space: nowrap;
 }
 
 .windContainer > div:last-child {

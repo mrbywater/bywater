@@ -1,6 +1,7 @@
 import './Main.scss'
 import './Weather.scss'
 import axios from "axios"
+import { weatherApiAxios, geoApiAxios } from '../../requests.js'
 import moment from 'moment'
 import { useState, useEffect, useRef } from 'react'
 import { Loader } from './Loader.js'
@@ -34,90 +35,201 @@ import {
 import Slider from 'infinite-react-carousel';
 import SunCalc from "suncalc"
 
-const thunderstorm = [
-		200,	
-		201,	
-		202,	
-		210,	
-		211,	
-		212,	
-		221,	
-		230,	
-		231,	
-		232
-	]
+const weatherIconArr = [
+	{
+		name: 'thunderstorm',
+		icon: faCloudBolt,
+		color: '#FBCE02',
+		idArr: [
+			200,	
+			201,	
+			202,	
+			210,	
+			211,	
+			212,	
+			221,	
+			230,	
+			231,	
+			232
+		]
+	},
+	{
+		name: 'drizzle',
+		icon: faCloudRain,
+		color: '#B1B7BA',
+		idArr: [
+			300, 
+			301, 
+			302, 
+			310, 
+			311, 	
+			312, 
+			313, 
+			314,  
+			321 
+		]
+	},
+	{
+		name: 'rain',
+		timeStyleChange: {
+			day: {
+				icon: faCloudSunRain,
+				color: '#83c1e8'
+			},
+			night: {
+				icon: faCloudMoonRain,
+				color: '#20204d'
+			}
+		},
+		idArr: [
+			500,
+			501,
+			502,
+			503,
+			504
+		]
+	},
+	{
+		name: 'rainSnow',
+		icon: faCloudMeatball,
+		color: '#c1e3ff',
+		idArr: [
+			511
+		]
+	},
+	{
+		name: 'rainCloud',
+		icon: faCloudShowersHeavy,
+		color: '#193f6e',
+		idArr: [
+			520,
+			521,
+			522,
+			531
+		]
+	},
+	{
+		name: 'snow',
+		icon: faSnowflake,
+		color: '#e1ebec',
+		idArr: [
+			600,	
+			601,	
+			602,	
+			611,	
+			612,	
+			613,
+			615,	
+			616,
+			620,	
+			621,
+			622
+		]
+	},
+	{
+		name: 'atmosphere',
+		icon: faSmog,
+		color: '#c2c5cb',
+		idArr: [
+			701,	
+			711,	
+			721,	
+			731,	
+			741,	
+			751,	
+			761,
+			762,	
+			771,	
+			781
+		]
+	},
+	{
+		name: 'clear',
+		timeStyleChange: {
+			day: {
+				icon: faCircle,
+				color: '#FBCE02'
+			},
+			night: {
+				icon: faMoon,
+				color: '#f1eaca'
+			}
+		},
+		idArr: [
+			800
+		]
+	},
+	{
+		name: 'fewClouds',
+		timeStyleChange: {
+			day: {
+				icon: faCloudSun,
+				color: '#FAD074'
+			},
+			night: {
+				icon: faCloudMoon,
+				color: '#272727'
+			}
+		},
+		idArr: [
+			801
+		]
+	},
+	{
+		name: 'clouds',
+		icon: faCloud,
+		color: '#f9f9f7',
+		idArr: [
+			802,
+			803,
+			804
+		]
+	},
+]
 
-	const drizzle = [
-		300, 
-		301, 
-		302, 
-		310, 
-		311, 	
-		312, 
-		313, 
-		314,  
-		321 
-	]
+const airIndexBgColor = [
+	{
+		label: 'Good',
+		color: '#058240'
+	},
+	{
+		label: 'Fair',
+		color: '#637713'
+	},
+	{
+		label: 'Moderate',
+		color: '#f3b800'	
+	},
+	{
+		label: 'Poor',
+		color: '#EE9B01'
+	},
+	{
+		label: 'Very Poor',
+		color: '#BC0000'
+	},
+]
 
-	const rain = [
-		500,
-		501,
-		502,
-		503,
-		504
-	]
+const airIndexInfo = [
+	{
+		label: 'PM2.5',
+		name: 'pm2_5'
+	},
+	{
+		label: 'SO2',
+		name: 'so2'
+	},
+	{
+		label: 'NO2',
+		name: 'no2'
+	},
+	{
+		label: 'O3',
+		name: 'o3'
+	}
+]
 
-	const rainSnow = [
-		511
-	]
-
-	const rainCloud = [
-		520,
-		521,
-		522,
-		531
-	]
-
-	const snow = [
-		600,	
-		601,	
-		602,	
-		611,	
-		612,	
-		613,
-		615,	
-		616,
-		620,	
-		621,
-		622	
-	]
-
-	const atmosphere = [
-		701,	
-		711,	
-		721,	
-		731,	
-		741,	
-		751,	
-		761,
-		762,	
-		771,	
-		781	
-	]
-
-	const clear = [
-		800
-	]
-
-	const fewClouds = [
-		801
-	]
-
-	const clouds = [
-		802,
-		803,
-		804
-	]
+const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
 const Weather = () => {
 
@@ -133,14 +245,12 @@ const Weather = () => {
 	const [soonW, setSoonW] = useState([])
 	const [fiveDayForecast, setFiveDayForecast] = useState([])
 	const [focused, setFocused] = useState(false)
-	const [placeName, setPlaceName] = useState('')
-	const [value, setValue] = useState('')
+	const [placeNameValue, setPlaceNameValue] = useState('')
+	const [airIndexInfoFull, setAirIndexInfoFull] = useState([])
 	const [lat, setLat] = useState(currentLat ? currentLat : '50.4500336')
 	const [lon, setLon] = useState(currentLon ? currentLon : '30.5241361')
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	
-	const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
-
 	const dateToday = new Date();
 	const todayOptions = { weekday: 'long', month: 'short', day: 'numeric' };
 	const forecastMonth = {  day: 'numeric', month: 'short'}
@@ -162,14 +272,14 @@ const Weather = () => {
 
 	const weatherAPI = async () => {
 		try {
-		    const resCW = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
-		    const resF = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
-		    const resA = await axios.get(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+		    const resCurrencyWeather = await weatherApiAxios.get(`/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
+		    const resForecast = await weatherApiAxios.get(`/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
+		    const resAir = await weatherApiAxios.get(`/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`)
 		    
 		    return (
-		    	setCurrentWeather([resCW.data]),
-		    	setForecastWeather([resF.data]),
-		    	setAirPollution([resA.data])
+		    	setCurrentWeather([resCurrencyWeather.data]),
+		    	setForecastWeather([resForecast.data]),
+		    	setAirPollution([resAir.data])
 		    )
 		  } catch (err) {
 		    console.error(err.toJSON())
@@ -178,7 +288,7 @@ const Weather = () => {
 
 	const geoAPI = async () => {
 		try {
-		    const resGeo = await axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${placeName ? placeName : ' '}&limit=5&appid=${apiKey}`)
+		    const resGeo = await geoApiAxios.get(`/direct?q=${placeNameValue ? placeNameValue : ' '}&limit=5&appid=${apiKey}`)
 		    
 		    return (
 		    	setGeo([resGeo.data])
@@ -192,14 +302,13 @@ const Weather = () => {
 	const onBlur = () => setFocused(false)
 
 	const inputHandler = () => (event) => {
-		setPlaceName(event.target.value)
-		setValue(event.target.value)
+		setPlaceNameValue(event.target.value)
 	}
 
 	const placeSelectHandler = (item) => () => {
 		setLat(item.lat)
 		setLon(item.lon)
-		setValue('')
+		setPlaceNameValue('')
 		onBlur()
 	}
 
@@ -239,121 +348,19 @@ const Weather = () => {
    		 });
 	}
 
-	const airIndexBgColor = (airIndex) => {
-
-		switch (airIndex) {
-			case 1:
-				return {
-					label: 'Good',
-					color: '#058240'
-				};
-			case 2: 
-				return {
-					label: 'Fair',
-					color: '#637713'
-				};
-			case 3:
-				return {
-					label: 'Moderate',
-					color: '#f3b800'
-				};
-			case 4:
-				return {
-					label: 'Poor',
-					color: '#EE9B01'
-				};
-			case 5:
-				return {
-					label: 'Very Poor',
-					color: '#BC0000'
-				};
-			default:
-				return {
-					label: 'Good',
-					color: '#058240'
-				};
-		}	
-	}
-
 	const weatherIcon = (id, time) => {
 
 		const sunR = moment(sunSetAndSunRise('sunrise', lat, lon), "HH:mm");
 		const sunS = moment(sunSetAndSunRise('sunset', lat, lon), "HH:mm");
 		const currentTime = moment(time, "HH:mm");
 
-		if (thunderstorm.includes(id)) {
-			return {
-				icon: faCloudBolt,
-				color: '#FBCE02'
-			}
-		} else if (drizzle.includes(id)) {
-			return {
-				icon: faCloudRain,
-				color: '#B1B7BA'
-			}
-		} else if (rain.includes(id)) {
+		const selectedIcon = weatherIconArr.filter(item => item.idArr.includes(id) ? item : null)[0]
+
+		if (selectedIcon.timeStyleChange) {
 			if ( currentTime >= sunR && currentTime < sunS) {
-				return {
-					icon: faCloudSunRain,
-					color: '#83c1e8'
-				}
-			} else {
-				return {
-					icon: faCloudMoonRain,
-					color: '#20204d'
-				}
-			}
-		} else if (rainSnow.includes(id)) {
-			return {
-				icon: faCloudMeatball,
-				color: '#c1e3ff'
-			}
-		} else if (rainCloud.includes(id)) {
-			return {
-				icon: faCloudShowersHeavy,
-				color: '#193f6e'
-			}
-		} else if (snow.includes(id)) {
-			return {
-				icon: faSnowflake,
-				color: '#e1ebec'
-			}
-		} else if (atmosphere.includes(id)) {
-			return {
-				icon: faSmog,
-				color: '#c2c5cb'
-			}
-		} else if (clear.includes(id)) {
-			if ( currentTime >= sunR && currentTime < sunS) {
-				return {
-					icon: faCircle,
-					color: '#FBCE02'
-				}
-			} else {
-				return {
-					icon: faMoon,
-					color: '#f1eaca'
-				}
-			}
-		} else if (fewClouds.includes(id)) {
-			if ( currentTime >= sunR && currentTime < sunS) {
-				return {
-					icon: faCloudSun,
-					color: '#FAD074'
-				}
-			} else {
-				return {
-					icon: faCloudMoon,
-					color: '#272727'
-				}
-			}
-			
-		} else if (clouds.includes(id)) {
-			return {
-				icon: faCloud,
-				color: '#f9f9f7'
-			}
-		}		
+				return selectedIcon.timeStyleChange.day
+			} else return selectedIcon.timeStyleChange.night
+		} else return selectedIcon
 	
 	}
 
@@ -363,7 +370,7 @@ const Weather = () => {
 
 	useEffect(() => {
 		geoAPI()
-	}, [placeName])
+	}, [placeNameValue])
 
 	useEffect(() => {
 		if (forecastWeather) {
@@ -392,6 +399,18 @@ const Weather = () => {
 	}, [forecastWeather])
 
 	useEffect(()=> {
+		if (airPollution) {
+			setAirIndexInfoFull(airIndexInfo.map(item => {
+				return {
+					...item,
+					value: airPollution[0].list[0].components[item.name]
+				}
+			}))
+		}
+
+	}, [airPollution])
+
+	useEffect(()=> {
 		const handleClickOutside = (event) => {
 			if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
 				onBlur()
@@ -401,11 +420,13 @@ const Weather = () => {
 		document.addEventListener('click', handleClickOutside);
 
 		window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
+		
+		return () => document.removeEventListener('click', handleClickOutside)
 
 	}, [])
 
-	if (currentWeather && forecastWeather && airPollution && soonW.length) {
-		return (
+	return currentWeather && forecastWeather && airPollution && soonW.length ?
+		 (
 			<div className="mainContainerContent">
 				<div className="weatherContainer">
 					<div className="searchContainer">
@@ -416,12 +437,12 @@ const Weather = () => {
 							<input 
 								placeholder="Search..." 
 								onFocus={onFocus} 
-								value={value}
-								className={focused && value ? "searchInput searchInputActive" : "searchInput"}
+								value={placeNameValue}
+								className={focused && placeNameValue ? "searchInput searchInputActive" : "searchInput"}
 								onChange={inputHandler()}
 							/>
-							<FontAwesomeIcon className={focused && value ? 'searchAnimation' : ''} icon={faMagnifyingGlassLocation}/>
-							<div className={focused && value ? "dropDownMenuActive" : "dropDownMenuNone"}>
+							<FontAwesomeIcon className={focused && placeNameValue ? 'searchAnimation' : ''} icon={faMagnifyingGlassLocation}/>
+							<div className={focused && placeNameValue ? "dropDownMenuActive" : "dropDownMenuNone"}>
 								{geo[0].length ? (
 									geo[0].map(item => (
 										<div 
@@ -449,8 +470,8 @@ const Weather = () => {
 					<div className="weatherInfoContainer">
 						<div>
 							<div className="nowWeatherContainer">
-								{currentWeather.map(item => (
-									<div>
+								{currentWeather.map((item, index) => (
+									<div key={`currentWeatherTemp_${index}`}>
 										<div className="nowWeatherTopContainer">
 											<div>Now</div>
 											<div>
@@ -522,35 +543,25 @@ const Weather = () => {
 									</div>
 									<div>
 										<div className="windAndSunsetContainer">
-										{airPollution.map(item => (
 											<div className="windContainer">
 												<div>
 													<div>Air Quality Index</div>
-													<div style={{backgroundColor: `${airIndexBgColor(item.list[0].main.aqi).color}`}}>{airIndexBgColor(item.list[0].main.aqi).label}</div>
+													<div style={{backgroundColor: `${airIndexBgColor[airPollution[0].list[0].main.aqi - 1].color}`}}>
+														{airIndexBgColor[airPollution[0].list[0].main.aqi - 1].label}
+													</div>
 												</div>
 												<div>
 													<FontAwesomeIcon icon={faWind}/>
-													<div>
-														<span>PM25</span>
-														{item.list[0].components.pm2_5}
-													</div>
-													<div>
-														<span>SO2</span>
-														{item.list[0].components.so2}
-													</div>
-													<div>
-														<span>NO2</span>
-														{item.list[0].components.no2}
-													</div>
-													<div>
-														<span>O3</span>
-														{item.list[0].components.o3}
-													</div>
+													{airIndexInfoFull.map(airIndex => (
+														<div key={`airIndex_${airIndex.name}`}>
+															<span>{airIndex.label}</span>
+															{airIndex.value}
+														</div>
+													))}
 												</div>
 											</div>
-										))}
-										{currentWeather.map(item => (
-											<div className="todaysHighlightsExtraBlocksContainer">
+										{currentWeather.map((item, index) => (
+											<div className="todaysHighlightsExtraBlocksContainer" key={`currentWeatherHum_${index}`}>
 												<div>
 													<span>Humidity</span>
 													<div>
@@ -596,8 +607,8 @@ const Weather = () => {
 													</div>
 												</div>
 											</div>
-											{currentWeather.map(item => (
-												<div className="todaysHighlightsExtraBlocksContainer">
+											{currentWeather.map((item, index) => (
+												<div className="todaysHighlightsExtraBlocksContainer" key={`currentWeatherVis_${index}`}>
 													<div>
 														<span>Visibility</span>
 														<div>
@@ -697,13 +708,7 @@ const Weather = () => {
 					</div>
 				</div>
 			</div>
-		)
-	} else {
-		return (
-			<Loader/>
-		)
-	}
-	
+		) : <Loader/>
 }
 
 export {Weather}
