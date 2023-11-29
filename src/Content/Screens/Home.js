@@ -38,7 +38,7 @@ const skills = [
 		img : require('../../Images/sass.png')
 	},
 	{
-		name: 'Axois',
+		name: 'Axios',
 		img : require('../../Images/axios.png')
 	},
 	{
