@@ -1,10 +1,9 @@
-import './Main.scss'
+import '../Components/Main.scss'
 import './Weather.scss'
-import axios from "axios"
 import { weatherApiAxios, geoApiAxios } from '../../requests.js'
 import moment from 'moment'
 import { useState, useEffect, useRef } from 'react'
-import { Loader } from './Loader.js'
+import { Loader } from '../Components/Loader.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faMagnifyingGlassLocation,  
@@ -33,7 +32,8 @@ import {
 	faCloudRain
 } from "@fortawesome/free-solid-svg-icons";
 import Slider from 'infinite-react-carousel';
-import SunCalc from "suncalc"
+import SunCalc from "suncalc";
+import {useScreenResize} from "../../helper";
 
 const weatherIconArr = [
 	{
@@ -232,11 +232,13 @@ const airIndexInfo = [
 const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
 const Weather = () => {
-
+    // s/m styles
 	const dropDownRef = useRef();
 
 	const currentLat = localStorage.getItem('currentLat');
 	const currentLon = localStorage.getItem('currentLon');
+
+	const windowWidth = useScreenResize()
 
 	const [currentWeather, setCurrentWeather] = useState(null)
 	const [geo, setGeo] = useState(null)
@@ -249,9 +251,8 @@ const Weather = () => {
 	const [airIndexInfoFull, setAirIndexInfoFull] = useState([])
 	const [lat, setLat] = useState(currentLat ? currentLat : '50.4500336')
 	const [lon, setLon] = useState(currentLon ? currentLon : '30.5241361')
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	
-	const dateToday = new Date();
+	const dateToday = moment().toDate();
 	const todayOptions = { weekday: 'long', month: 'short', day: 'numeric' };
 	const forecastMonth = {  day: 'numeric', month: 'short'}
 	const forecastWeekday = { weekday: 'short' }
@@ -313,7 +314,8 @@ const Weather = () => {
 	}
 
 	const date = (lang, opt, day = null) => {
-		const dataForecast = new Date(day)
+
+		const dataForecast = moment(day).toDate()
 
 		if (day) {
 			return dataForecast.toLocaleString(lang, opt);
@@ -327,7 +329,7 @@ const Weather = () => {
 	)
 
 	const sunSetAndSunRise = (state, lat, lon) => {
-		const times = SunCalc.getTimes(new Date(), lat, lon);
+		const times = SunCalc.getTimes(moment().toDate(), lat, lon);
 		const sunriseStr = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
 		const sunsetStr = times.sunset.getHours() + ':' + times.sunset.getMinutes();
 
@@ -419,8 +421,6 @@ const Weather = () => {
 
 		document.addEventListener('click', handleClickOutside);
 
-		window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
-		
 		return () => document.removeEventListener('click', handleClickOutside)
 
 	}, [])

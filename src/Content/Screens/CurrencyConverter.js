@@ -1,25 +1,33 @@
-import './Main.scss'
+import '../Components/Main.scss'
 import './CurrencyConverter.scss'
 import axios from "axios"
 import moment from 'moment'
-import { GraficCurrencyConverter } from './GraficCurrencyConverter.js';
-import { InputBlockCurrencyConverter } from './InputBlockCurrencyConverter.js';
+import {currencyApiAxios} from '../../requests.js'
+import { GraficCurrencyConverter } from '../Components/GraficCurrencyConverter.js';
+import { InputBlockCurrencyConverter } from '../Components/InputBlockCurrencyConverter.js';
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightLeft, faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-multi-date-picker";
 import InputIcon from "react-multi-date-picker/components/input_icon"
 import "react-multi-date-picker/styles/layouts/mobile.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
-import { Loader } from './Loader.js'
+import { Loader } from '../Components/Loader.js'
+
+const apiKey = 'd235c21d0b78818653feef36b9149cc49272039f'
 
 const CurrencyConverter = () => {
 
 	const datePickerRef = useRef();
 
-	const apiKey = 'd235c21d0b78818653feef36b9149cc49272039f'
+	const datePickerOptions = {
+		label: "YESTERDAY",
+	    type: "button",
+	    className: "rmdp-button rmdp-action-button",
+	    onClick: () => datePickerChooseYesterday(),
+	}
 
-	const [dateValue, setDateValue] = useState(new Date(Date.now()-86400000))
+	const [dateValue, setDateValue] = useState(moment().subtract(1, 'day').toDate())
 	const [rightFormatDate, setRightFormatDate] = useState(moment(dateValue).format("YYYY-MM-DD"))
 	const [convertCurrency, setConvertCurrency] = useState(null)
 	const [currencySymbols, setCurrencySymbols] = useState(null)
@@ -39,15 +47,15 @@ const CurrencyConverter = () => {
 
 	const dates = Array.from({ length: 3 }, (item, index) => (moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))).reverse()
 
-	const currrencyAPI = async () => {
+	const currencyAPI = async () => {
 		try {
 
 			const graficUrlCreator = dates.map(dates => (
-				axios.get(`https://api.getgeoapi.com/v2/currency/historical/${dates}?api_key=${apiKey}`)
+				currencyApiAxios.get(`/historical/${dates}?api_key=${apiKey}`)
 			))
 
 			const resC = await axios.all(graficUrlCreator)
-		    const resS = await axios.get(`https://api.getgeoapi.com/v2/currency/list?api_key=${apiKey}`)
+		    const resS = await currencyApiAxios.get(`/list?api_key=${apiKey}`)
 
 		    return (	
 		    	setCurrencySymbols([resS.data.currencies]),
@@ -84,8 +92,13 @@ const CurrencyConverter = () => {
 		}
 	}
 
+	const datePickerChooseYesterday = () => {
+		setDateValue(moment().subtract(1, 'day').toDate())
+		datePickerRef.current.closeCalendar()
+	}
+
 	useEffect(()=> {
-		currrencyAPI()
+		currencyAPI()
 	}, [rightFormatDate])
 
 	useEffect(()=> {
@@ -131,8 +144,8 @@ const CurrencyConverter = () => {
 		
 	}, [firstInputShortCurrency, secondInputShortCurrency])
 
-	if (currencySymbols && convertCurrency) {
-		return (
+	return currencySymbols && convertCurrency ?
+		(
 			<div className="mainContainerContent">
 				<div className="currencyConverterContainer">
 					<div className="converterContainer">
@@ -176,19 +189,9 @@ const CurrencyConverter = () => {
 									className="rmdp-mobile bg-dark"
 								    value={dateValue}
 								    onChange={setDateValue}
-								    minDate={new Date('Jan 1, 2010')}
-								    maxDate={new Date(Date.now()-86400000)}
-								    mobileButtons={[
-								      {
-								        label: "YESTERDAY",
-								        type: "button",
-								        className: "rmdp-button rmdp-action-button",
-								        onClick: () => {
-								        	setDateValue(new Date(Date.now()-86400000))
-								        	datePickerRef.current.closeCalendar()
-								        },
-								      },
-								    ]}
+								    minDate={moment('Jan 1, 2010').toDate()}
+								    maxDate={moment().subtract(1, 'day').toDate()}
+								    mobileButtons={[{...datePickerOptions}]}
 									render={<InputIcon/>}
 								/>
 							</div>
@@ -206,12 +209,7 @@ const CurrencyConverter = () => {
 					</div>
 				</div>
 			</div>
-		)
-	} else {
-		return (
-			<Loader/>
-		)
-	}
+		) : <Loader/>
 }
 
 export {CurrencyConverter}

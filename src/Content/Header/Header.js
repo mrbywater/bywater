@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { slide as Menu } from 'react-burger-menu'
+import {useScreenResize} from "../../helper";
 
 const headerButtons = [
 	{
@@ -27,11 +28,12 @@ const headerButtons = [
 
 const Header = () => {
 
+	const windowWidth = useScreenResize()
+
 	let darkMode = localStorage.getItem('darkMode');
 	let location = useLocation().pathname.slice(1)
 
 	const [switcher, setSwitcher] = useState(darkMode === 'enabled' ? false : true)
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [isOpen, setOpen] = useState(false)
 
 	const handleIsOpen = () => setOpen(!isOpen)
@@ -65,11 +67,6 @@ const Header = () => {
             setSwitcher(false)
         }
     }, [darkMode])
-
-    useEffect(() => {
-        window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
-    }, [])
-
 
     const linkConvert = (str) => (str.toLowerCase().replace(/ /g, '-'))
     if (windowWidth <= 1280) {

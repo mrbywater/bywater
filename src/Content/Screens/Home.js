@@ -1,4 +1,4 @@
-import './Main.scss'
+import '../Components/Main.scss'
 import './Home.scss'
 import AOS from "aos"
 import "aos/dist/aos.css"
@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-
+import {useScreenResize} from "../../helper";
 
 const skills = [
 	{
@@ -49,11 +49,10 @@ const skills = [
 
 const Home = () => {
 
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-	
+	const windowWidth = useScreenResize()
+
 	useEffect(() => {
         AOS.init();
-        window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
     }, [])
 
 	return (

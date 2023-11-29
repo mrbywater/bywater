@@ -13,6 +13,7 @@ import {
   Legend,
   Filler 
 } from 'chart.js';
+import {useScreenResize} from "../../helper";
 
 ChartJS.register(
   CategoryScale,
@@ -34,18 +35,15 @@ const GraficCurrencyConverter = (props) => {
 		secondInputShortCurrency
 	} = props
 
+	const windowWidth = useScreenResize()
+
 	const [value, setValue] = useState([])
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
 	useMemo(()=> {
 			setValue(graficValues.map(item => (
 					item.rates[secondInputShortCurrency].rate/item.rates[firstInputShortCurrency].rate
 			)))
 	}, [firstInputShortCurrency, secondInputShortCurrency, graficValues])
-
-	 useEffect(() => {
-        window.addEventListener('resize', ()=>{setWindowWidth(window.innerWidth)});
-    }, [])
 
 	const options = {
 	  responsive: true,
