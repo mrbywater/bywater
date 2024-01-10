@@ -11,4 +11,4 @@
 </ul>
 
 <div>Email - nickmelnikbywater@gmail.com</div>
-<div>Linkedin - <a>https://www.linkedin.com/in/nick-melnik-mrbywater</a></div>
+Linkedin - [https://www.linkedin.com/in/nick-melnik-mrbywater]https://www.linkedin.com/in/nick-melnik-mrbywater
