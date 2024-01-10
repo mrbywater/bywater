@@ -148,7 +148,7 @@ const Home = () => {
 				</div>
 				<div>
 					<div data-aos="zoom-in-down">
-						<span>I'm a 21-year-old computer science student from Ukraine, familiar with ReactJS, and have written several trial projects using React and ReactNative, as well as a full-fledged project - my thesis. This is a portfolio website and plus a couple of small works.</span>
+						<span>I'm a 22-year-old computer science student from Ukraine, familiar with ReactJS, and have written several trial projects using React and ReactNative, as well as a full-fledged project - my thesis. This is a portfolio website and plus a couple of small works.</span>
 						<span><b>E-mail:</b> nickmelnikbywater@gmail.com</span>
 						<div className="infoButtonsMobile">
 							<div>
