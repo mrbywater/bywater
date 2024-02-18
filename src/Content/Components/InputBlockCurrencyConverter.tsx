@@ -1,7 +1,8 @@
 import './InputBlockCurrencyConverter.scss'
-import { useState, useRef, useEffect, useMemo } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { SetState, InputBlockCurrencyConverterItem, GetComponentProps } from '../../types'
 
 const fastChoiceArr = [
 	'USD',
@@ -10,10 +11,10 @@ const fastChoiceArr = [
 	'JPY'
 ]
 
-const InputBlockCurrencyConverter = (props) => {
+const InputBlockCurrencyConverter : GetComponentProps<InputBlockCurrencyConverterItem> = (props) => {
 
 	const {
-		handlerAmmountChange,
+		handlerAmountChange,
 		amount,
 		inputFocused,
 		setInputFocused,
@@ -24,47 +25,48 @@ const InputBlockCurrencyConverter = (props) => {
 		currencySymbolsNames
 	} = props
 
-	const inputRef = useRef();
-	const isFocused = useRef();
 
-	const [filtredSymbolsNames, setFiltredSymbolsNames] = useState(currencySymbolsNames)
+	const inputRef = useRef<any>();
+	const isFocused = useRef<any>();
 
-	const fastChoiceCurrency = (item) => () => setInputShortCurrency(item)
+	const [filteredSymbolsNames, setFilteredSymbolsNames] = useState<string[][]>(currencySymbolsNames)
 
-	const handlerChangeCurrency = (setInputFocused, setInputValue, setInputShortCurrency, item) => (event) => {
+	const fastChoiceCurrency = (presetCurrency : string) => () => setInputShortCurrency(presetCurrency)
+
+	const handlerChangeCurrency = (setInputFocused : SetState<boolean>, setInputValue : SetState<string>, setInputShortCurrency : SetState<string>, item : string[]) => () : void => {
 		setInputFocused(false)
 		setInputValue(item[1])
 		setInputShortCurrency(item[0])
 	}
 
-	const searchIconAppear = (setInputValue, ref) => () => {
+	const searchIconAppear = (setInputValue : SetState<string>, ref : any) => () : void => {
 		setInputValue('')
 		ref.current.focus();
 	} 
 
-	const onMouseDownClear = (setInputValue) => () => setInputValue('')
+	const onMouseDownClear = (setInputValue : SetState<string>) => () => setInputValue('')
 
-	const inputValueHandler = (setInputValue) => (event) => setInputValue(event.target.value)
+	const inputValueHandler = (setInputValue : SetState<string>) => (event: React.ChangeEvent<HTMLInputElement>) => setInputValue(event.target.value)
 
-	const filterCurrency = (inputValue, setFiltredArr) => {
-		setFiltredArr(currencySymbolsNames.filter(item => (
+	const filterCurrency = (inputValue : string, setFilteredArr : SetState<string[][]>): void => {
+		setFilteredArr(currencySymbolsNames.filter((item : string[]) => (
 			item[1].toLowerCase().includes(inputValue.toLowerCase())
 		)))
 	} 
 
-	const onFocus = (setInput) => () => setInput(true)
-	const onBlur = (setInput) => setInput(false)	
+	const onFocus = (setInput : SetState<boolean>) => () => setInput(true)
+	const onBlur = (setInput : SetState<boolean>) => setInput(false)
 
 	useMemo(()=> {
 
-		filterCurrency(inputValue, setFiltredSymbolsNames)
+		filterCurrency(inputValue, setFilteredSymbolsNames)
 
 	}, [inputValue])
 
 	useEffect(()=> {
 
-		document.addEventListener('click', event => {
-			if (inputRef.current && !inputRef.current.contains(event.target)) {
+		document.addEventListener('click', (event : MouseEvent): void  => {
+			if (inputRef.current && !inputRef.current.contains(event.target) ) {
 				onBlur(setInputFocused)
 			}
 		});
@@ -97,14 +99,14 @@ const InputBlockCurrencyConverter = (props) => {
 					onMouseDown={onMouseDownClear(setInputValue)}
 				/>
 				{!inputFocused && inputValue &&
-					<span class="tooltiptext">
+					<span className="tooltiptext">
 						{inputValue}
 					</span>
 				}
 				{inputFocused &&
 					<div>
-						{filtredSymbolsNames.length ? (
-							filtredSymbolsNames.sort().map(item => (
+						{filteredSymbolsNames.length ? (
+							filteredSymbolsNames.sort().map((item : string[])=> (
 								<div 
 									className="selectedCurrency"
 									onClick={handlerChangeCurrency(setInputFocused, setInputValue, setInputShortCurrency, item)}
@@ -125,16 +127,17 @@ const InputBlockCurrencyConverter = (props) => {
 			<div className="currencyValue">
 				<input 
 					value={amount}
-					onChange={handlerAmmountChange}
+					onChange={handlerAmountChange}
 					className="amountInput"
 				/>
 			</div>
 			<div className="fastCurrency">
-				{fastChoiceArr.map(item => (
+				{fastChoiceArr.map((presetCurrency : string) => (
 					<div
-						onClick={fastChoiceCurrency(item)}
+						onClick={fastChoiceCurrency(presetCurrency)}
+						key={`fast_currency_${presetCurrency}`}
 					>
-						{item}
+						{presetCurrency}
 					</div>
 				))}
 			</div>

@@ -1,11 +1,11 @@
 import './App.scss';
 import {Routes, Route} from 'react-router-dom';
-import {Header} from './Content/Header/Header.js';
-import {Footer} from './Content/Footer/Footer.js';
-import {NotFoundPage} from './Content/Components/NotFoundPage.js';
-import {Home} from './Content/Screens/Home.js';
-import {Weather} from './Content/Screens/Weather.js';
-import {CurrencyConverter} from './Content/Screens/CurrencyConverter.js';
+import {Header} from './Content/Header/Header';
+import {Footer} from './Content/Footer/Footer';
+import {NotFoundPage} from './Content/Components/NotFoundPage';
+import {Home} from './Content/Screens/Home';
+import {Weather} from './Content/Screens/Weather';
+import {CurrencyConverter} from './Content/Screens/CurrencyConverter';
 
 function App() {
   return (

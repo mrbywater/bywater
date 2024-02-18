@@ -1,6 +1,6 @@
 import './GraficCurrencyConverter.scss'
-import moment from 'moment'
-import { useState, useMemo, useEffect } from 'react'
+import * as moment from 'moment'
+import { useState, useMemo } from 'react'
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,6 +14,13 @@ import {
   Filler 
 } from 'chart.js';
 import {useScreenResize} from "../../helper";
+import {
+	GetComponentProps,
+	GraficCurrencyConverterItem,
+	GraphicValue,
+	GraphicValueData,
+	GraphicValueOptions
+} from '../../types'
 
 ChartJS.register(
   CategoryScale,
@@ -26,7 +33,7 @@ ChartJS.register(
   Filler 
 );
 
-const GraficCurrencyConverter = (props) => {
+const GraficCurrencyConverter : GetComponentProps<GraficCurrencyConverterItem> = (props) => {
 
 	const {
 		datesArr,
@@ -35,17 +42,17 @@ const GraficCurrencyConverter = (props) => {
 		secondInputShortCurrency
 	} = props
 
-	const windowWidth = useScreenResize()
+	const windowWidth : number = useScreenResize()
 
-	const [value, setValue] = useState([])
+	const [value, setValue] = useState<number[]>([])
 
-	useMemo(()=> {
-			setValue(graficValues.map(item => (
+	useMemo(() : void => {
+			setValue(graficValues.map((item : GraphicValue) => (
 					item.rates[secondInputShortCurrency].rate/item.rates[firstInputShortCurrency].rate
 			)))
 	}, [firstInputShortCurrency, secondInputShortCurrency, graficValues])
 
-	const options = {
+	const options : GraphicValueOptions = {
 	  responsive: true,
 	  plugins: {
 	    legend: {
@@ -55,16 +62,16 @@ const GraficCurrencyConverter = (props) => {
 	      display: false,
 	    },
 	  },
-	};	
+	};
 
-	const labels = datesArr.map(dates => moment(dates).format('MMM'));
+	const labels: string[] = datesArr.map((dates : string) => moment.default(dates).format('MMM'));
 
-	const minValue = Math.min(...value) 
-	const sum = value.reduce((a, b) => +a + +b, 0);
-	const avgValue = (sum / value.length) || 0;
-	const maxValue = Math.max(...value) 
+	const minValue: number = Math.min(...value)
+	const sum: number = value.reduce((a : number, b : number) => +a + +b, 0);
+	const avgValue: number = (sum / value.length) || 0;
+	const maxValue: number = Math.max(...value)
 
-	const data = {
+	const data : GraphicValueData = {
 	  labels,
 	  datasets: [
 	    {

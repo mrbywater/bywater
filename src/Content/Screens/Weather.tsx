@@ -1,9 +1,9 @@
 import '../Components/Main.scss'
 import './Weather.scss'
-import { weatherApiAxios, geoApiAxios } from '../../requests.js'
-import moment from 'moment'
-import { useState, useEffect, useRef } from 'react'
-import { Loader } from '../Components/Loader.js'
+import { weatherApiAxios, geoApiAxios } from '../../requests'
+import * as moment from 'moment'
+import React, { useState, useEffect, useRef } from 'react'
+import { Loader } from '../Components/Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faMagnifyingGlassLocation,  
@@ -31,9 +31,24 @@ import {
 	faSmog,
 	faCloudRain
 } from "@fortawesome/free-solid-svg-icons";
+// @ts-ignore
 import Slider from 'infinite-react-carousel';
 import SunCalc from "suncalc";
 import {useScreenResize} from "../../helper";
+import {
+	LatAndLoneType,
+	WeatherIcon,
+	StyleChangeIcon,
+	WeatherDateOptions,
+	WeatherGeoItem,
+	WeatherSliderSettings,
+	ApiResponseType,
+	CurrentWeather,
+	AirPollutionIndex,
+	ForecastWeather,
+	ForecastWeatherListItem,
+	AirIndexInfo,
+} from "../../types";
 
 const weatherIconArr = [
 	{
@@ -232,35 +247,35 @@ const airIndexInfo = [
 const apiKey = '00cf10c3137056d7ada001eac2f8b7f6'
 
 const Weather = () => {
-    // s/m styles
-	const dropDownRef = useRef();
 
-	const currentLat = localStorage.getItem('currentLat');
-	const currentLon = localStorage.getItem('currentLon');
+	const dropDownRef = useRef<any>();
 
-	const windowWidth = useScreenResize()
+	const currentLat: string | null = localStorage.getItem('currentLat');
+	const currentLon: string | null = localStorage.getItem('currentLon');
 
-	const [currentWeather, setCurrentWeather] = useState(null)
-	const [geo, setGeo] = useState(null)
-	const [airPollution, setAirPollution] = useState(null)
-	const [forecastWeather, setForecastWeather] = useState(null)
-	const [soonW, setSoonW] = useState([])
-	const [fiveDayForecast, setFiveDayForecast] = useState([])
-	const [focused, setFocused] = useState(false)
-	const [placeNameValue, setPlaceNameValue] = useState('')
-	const [airIndexInfoFull, setAirIndexInfoFull] = useState([])
-	const [lat, setLat] = useState(currentLat ? currentLat : '50.4500336')
-	const [lon, setLon] = useState(currentLon ? currentLon : '30.5241361')
+	const windowWidth: number = useScreenResize()
+
+	const [currentWeather, setCurrentWeather] = useState<ApiResponseType<CurrentWeather>>(null)
+	const [geo, setGeo] = useState<ApiResponseType<WeatherGeoItem[]>>(null)
+	const [airPollution, setAirPollution] = useState<ApiResponseType<AirPollutionIndex>>(null)
+	const [forecastWeather, setForecastWeather] = useState<ApiResponseType<ForecastWeather>>(null)
+	const [soonW, setSoonW] = useState<ForecastWeatherListItem[]>([])
+	const [fiveDayForecast, setFiveDayForecast] = useState<ForecastWeatherListItem[]>([])
+	const [focused, setFocused] = useState<boolean>(false)
+	const [placeNameValue, setPlaceNameValue] = useState<string>('')
+	const [airIndexInfoFull, setAirIndexInfoFull] = useState<AirIndexInfo[]>([])
+	const [lat, setLat] = useState<LatAndLoneType>(currentLat ? currentLat : '50.4500336')
+	const [lon, setLon] = useState<LatAndLoneType>(currentLon ? currentLon : '30.5241361')
 	
-	const dateToday = moment().toDate();
-	const todayOptions = { weekday: 'long', month: 'short', day: 'numeric' };
-	const forecastMonth = {  day: 'numeric', month: 'short'}
-	const forecastWeekday = { weekday: 'short' }
-	const timeNow = moment().format('HH:MM')
+	const dateToday: Date = moment.default().toDate();
+	const todayOptions: WeatherDateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
+	const forecastMonth : WeatherDateOptions = {  day: 'numeric', month: 'short'}
+	const forecastWeekday: WeatherDateOptions = { weekday: 'short' }
+	const timeNow: string = moment.default().format('HH:MM')
 
-	const searchActiveWidth = windowWidth > 1200 ? '25%' : '40%'
+	const searchActiveWidth : string = windowWidth > 1200 ? '25%' : '40%'
 
-	const sliderSettings =  {
+	const sliderSettings : WeatherSliderSettings =  {
       arrows: false,
       arrowsBlock: false,
       autoplay: true,
@@ -276,11 +291,13 @@ const Weather = () => {
 		    const resCurrencyWeather = await weatherApiAxios.get(`/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
 		    const resForecast = await weatherApiAxios.get(`/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
 		    const resAir = await weatherApiAxios.get(`/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`)
-		    
+
+			console.log(resCurrencyWeather)
+
 		    return (
-		    	setCurrentWeather([resCurrencyWeather.data]),
-		    	setForecastWeather([resForecast.data]),
-		    	setAirPollution([resAir.data])
+		    	setCurrentWeather([resCurrencyWeather.data][0]),
+				setForecastWeather([resForecast.data][0]),
+		    	setAirPollution([resAir.data][0])
 		    )
 		  } catch (err) {
 		    console.error(err.toJSON())
@@ -292,7 +309,7 @@ const Weather = () => {
 		    const resGeo = await geoApiAxios.get(`/direct?q=${placeNameValue ? placeNameValue : ' '}&limit=5&appid=${apiKey}`)
 		    
 		    return (
-		    	setGeo([resGeo.data])
+		    	setGeo([resGeo.data][0])
 		    )
 		  } catch (err) {
 		    console.error(err.toJSON())
@@ -302,20 +319,20 @@ const Weather = () => {
 	const onFocus = () => setFocused(true)
 	const onBlur = () => setFocused(false)
 
-	const inputHandler = () => (event) => {
+	const inputHandler = () => (event : React.ChangeEvent<HTMLInputElement>): void => {
 		setPlaceNameValue(event.target.value)
 	}
 
-	const placeSelectHandler = (item) => () => {
+	const placeSelectHandler = (item : WeatherGeoItem) => () : void => {
 		setLat(item.lat)
 		setLon(item.lon)
 		setPlaceNameValue('')
 		onBlur()
 	}
 
-	const date = (lang, opt, day = null) => {
+	const date = (lang : string, opt: WeatherDateOptions, day : null | string = null) : string => {
 
-		const dataForecast = moment(day).toDate()
+		const dataForecast : Date = moment.default(day).toDate()
 
 		if (day) {
 			return dataForecast.toLocaleString(lang, opt);
@@ -324,14 +341,14 @@ const Weather = () => {
 		}
 	}
 
-	const letterToUpperCase = (str) => (
+	const letterToUpperCase = (str : string) => (
 		str.split(/\s+/).map(word => word[0].toUpperCase() + word.substring(1)).join(' ')
 	)
 
-	const sunSetAndSunRise = (state, lat, lon) => {
-		const times = SunCalc.getTimes(moment().toDate(), lat, lon);
-		const sunriseStr = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
-		const sunsetStr = times.sunset.getHours() + ':' + times.sunset.getMinutes();
+	const sunSetAndSunRise = (state : string, lat : LatAndLoneType, lon : LatAndLoneType): string => {
+		const times: SunCalc.GetTimesResult = SunCalc.getTimes(moment.default().toDate(), +lat, +lon);
+		const sunriseStr: string = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
+		const sunsetStr: string = times.sunset.getHours() + ':' + times.sunset.getMinutes();
 
 		if (state === 'sunrise') {
 			return sunriseStr
@@ -340,26 +357,26 @@ const Weather = () => {
 		}
 	}
 
-	const getCurrentLocatin = () => () => {
+	const getCurrentLocatin = () => () : void => {
 		navigator.geolocation.getCurrentPosition((position) => {
       		setLat(position.coords.latitude);
       		setLon(position.coords.longitude);
 
-      		localStorage.setItem('currentLat', position.coords.latitude);
-      		localStorage.setItem('currentLon', position.coords.longitude);
+      		localStorage.setItem('currentLat', position.coords.latitude + '');
+      		localStorage.setItem('currentLon', position.coords.longitude + '');
    		 });
 	}
 
-	const weatherIcon = (id, time) => {
+	const weatherIcon = (id : number, time : string): StyleChangeIcon | WeatherIcon => {
 
-		const sunR = moment(sunSetAndSunRise('sunrise', lat, lon), "HH:mm");
-		const sunS = moment(sunSetAndSunRise('sunset', lat, lon), "HH:mm");
-		const currentTime = moment(time, "HH:mm");
+		const sunR: moment.Moment = moment.default(sunSetAndSunRise('sunrise', lat, lon), "HH:mm");
+		const sunS: moment.Moment = moment.default(sunSetAndSunRise('sunset', lat, lon), "HH:mm");
+		const currentTime: moment.Moment = moment.default(time, "HH:mm");
 
-		const selectedIcon = weatherIconArr.filter(item => item.idArr.includes(id) ? item : null)[0]
+		const selectedIcon: WeatherIcon = weatherIconArr.filter((item: WeatherIcon) => item?.idArr?.includes(id) ? item : null)[0]
 
 		if (selectedIcon.timeStyleChange) {
-			if ( currentTime >= sunR && currentTime < sunS) {
+			if (currentTime >= sunR && currentTime < sunS) {
 				return selectedIcon.timeStyleChange.day
 			} else return selectedIcon.timeStyleChange.night
 		} else return selectedIcon
@@ -376,21 +393,21 @@ const Weather = () => {
 
 	useEffect(() => {
 		if (forecastWeather) {
-			const list = forecastWeather[0].list
+			const list: ForecastWeatherListItem[] = forecastWeather.list
 			
-			setSoonW(list.filter((item, index) => index < 8))
+			setSoonW(list.filter((item: ForecastWeatherListItem, index : number) => index < 8))
 
-			const fiveDayArrFinder = list.map(item => {
+			const fiveDayArrFinder: ForecastWeatherListItem[] = list.map((item : ForecastWeatherListItem) => {
 				return {
 					...item,
-					data: moment(item.dt_txt.slice(0, 10)).format('L')
+					data: moment.default(item.dt_txt.slice(0, 10)).format('L')
 				}
 			})
 
 			setFiveDayForecast(
-				fiveDayArrFinder.reverse().filter((elm, id) => (
-					fiveDayArrFinder.findIndex((item) => {
-						if (moment().format('L') !== item.data) {
+				fiveDayArrFinder.reverse().filter((elm : ForecastWeatherListItem, id: number) => (
+					fiveDayArrFinder.findIndex((item : ForecastWeatherListItem) => {
+						if (moment.default().format('L') !== item.data) {
 							return item.data === elm.data
 						}
 					}) === id)
@@ -398,14 +415,16 @@ const Weather = () => {
 			)
 		}
 
+
+
 	}, [forecastWeather])
 
 	useEffect(()=> {
 		if (airPollution) {
-			setAirIndexInfoFull(airIndexInfo.map(item => {
+			setAirIndexInfoFull(airIndexInfo.map((item : AirIndexInfo) => {
 				return {
 					...item,
-					value: airPollution[0].list[0].components[item.name]
+					value: airPollution.list[0].components[item.name]
 				}
 			}))
 		}
@@ -413,7 +432,7 @@ const Weather = () => {
 	}, [airPollution])
 
 	useEffect(()=> {
-		const handleClickOutside = (event) => {
+		const handleClickOutside = (event : MouseEvent): void => {
 			if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
 				onBlur()
 			}
@@ -425,7 +444,7 @@ const Weather = () => {
 
 	}, [])
 
-	return currentWeather && forecastWeather && airPollution && soonW.length ?
+	return currentWeather && forecastWeather && airPollution && geo && soonW.length ?
 		 (
 			<div className="mainContainerContent">
 				<div className="weatherContainer">
@@ -443,8 +462,8 @@ const Weather = () => {
 							/>
 							<FontAwesomeIcon className={focused && placeNameValue ? 'searchAnimation' : ''} icon={faMagnifyingGlassLocation}/>
 							<div className={focused && placeNameValue ? "dropDownMenuActive" : "dropDownMenuNone"}>
-								{geo[0].length ? (
-									geo[0].map(item => (
+								{geo.length ? (
+									geo.map((item : WeatherGeoItem) => (
 										<div 
 											className="dropDownMenuPlaces"
 											onClick={placeSelectHandler(item)}
@@ -470,38 +489,36 @@ const Weather = () => {
 					<div className="weatherInfoContainer">
 						<div>
 							<div className="nowWeatherContainer">
-								{currentWeather.map((item, index) => (
-									<div key={`currentWeatherTemp_${index}`}>
-										<div className="nowWeatherTopContainer">
-											<div>Now</div>
+								<div>
+									<div className="nowWeatherTopContainer">
+										<div>Now</div>
+										<div>
 											<div>
-												<div>
-													{Math.floor(item.main.temp)}
-													<span>°C</span>
-												</div>
-												<div>
-													<FontAwesomeIcon 
-														style={{color: weatherIcon(item.weather[0].id, timeNow).color}} 
-														icon={weatherIcon(item.weather[0].id, timeNow).icon}
-													/>
-												</div>
+												{Math.floor(currentWeather.main.temp)}
+												<span>°C</span>
 											</div>
 											<div>
-												{letterToUpperCase(item.weather[0].description)}
+												<FontAwesomeIcon
+													style={{color: weatherIcon(currentWeather.weather[0].id, timeNow).color}}
+													icon={weatherIcon(currentWeather.weather[0].id, timeNow).icon!}
+												/>
 											</div>
 										</div>
-										<div className="nowWeatherBottomContainer">
-											<div>
-												<FontAwesomeIcon icon={faCalendarDays}/>	
-												<span>{date('ENG', todayOptions)}</span>
-											</div>
-											<div>
-												<FontAwesomeIcon icon={faLocationDot}/>
-												<span>{item.name}</span>
-											</div>
+										<div>
+											{letterToUpperCase(currentWeather.weather[0].description)}
 										</div>
 									</div>
-								))}
+									<div className="nowWeatherBottomContainer">
+										<div>
+											<FontAwesomeIcon icon={faCalendarDays}/>
+											<span>{date('ENG', todayOptions)}</span>
+										</div>
+										<div>
+											<FontAwesomeIcon icon={faLocationDot}/>
+											<span>{currentWeather.name}</span>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div className="forecastContainer">
 								<div>
@@ -511,12 +528,12 @@ const Weather = () => {
 										</span>
 									</div>
 									<div>
-										{fiveDayForecast.map(item => (
+										{fiveDayForecast.map((item : ForecastWeatherListItem) => (
 											<div className="fiveDayForecastContainer" key={`fiveDayForecast_${item.dt_txt}`}>
 												<div>
 													<FontAwesomeIcon 
 														style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}} 
-														icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
+														icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon!}
 													/>
 													<div>
 														<span>{Math.floor(item.main.temp)}</span>
@@ -546,8 +563,8 @@ const Weather = () => {
 											<div className="windContainer">
 												<div>
 													<div>Air Quality Index</div>
-													<div style={{backgroundColor: `${airIndexBgColor[airPollution[0].list[0].main.aqi - 1].color}`}}>
-														{airIndexBgColor[airPollution[0].list[0].main.aqi - 1].label}
+													<div style={{backgroundColor: `${airIndexBgColor[airPollution.list[0].main.aqi - 1].color}`}}>
+														{airIndexBgColor[airPollution.list[0].main.aqi - 1].label}
 													</div>
 												</div>
 												<div>
@@ -560,14 +577,13 @@ const Weather = () => {
 													))}
 												</div>
 											</div>
-										{currentWeather.map((item, index) => (
-											<div className="todaysHighlightsExtraBlocksContainer" key={`currentWeatherHum_${index}`}>
+											<div className="todaysHighlightsExtraBlocksContainer">
 												<div>
 													<span>Humidity</span>
 													<div>
 														<FontAwesomeIcon icon={faDroplet}/>
 														<div>
-															<span>{item.main.humidity}</span>
+															<span>{currentWeather.main.humidity}</span>
 															<span>%</span>
 														</div>
 													</div>
@@ -577,13 +593,12 @@ const Weather = () => {
 													<div>
 														<FontAwesomeIcon icon={faArrowsDownToLine}/>
 														<div>
-															<span>{item.main.pressure}</span>
+															<span>{currentWeather.main.pressure}</span>
 															<span>hPa</span>
 														</div>
 													</div>
 												</div>
 											</div>
-										))}	
 										</div>
 										<div className="windAndSunsetContainer">
 											<div className="sunsetContainer">
@@ -607,30 +622,28 @@ const Weather = () => {
 													</div>
 												</div>
 											</div>
-											{currentWeather.map((item, index) => (
-												<div className="todaysHighlightsExtraBlocksContainer" key={`currentWeatherVis_${index}`}>
+											<div className="todaysHighlightsExtraBlocksContainer">
+												<div>
+													<span>Visibility</span>
 													<div>
-														<span>Visibility</span>
+														<FontAwesomeIcon icon={faEye}/>
 														<div>
-															<FontAwesomeIcon icon={faEye}/>
-															<div>
-																<span>{item.visibility / 1000}</span>
-																<span>km</span>
-															</div>
-														</div>
-													</div>
-													<div>
-														<span>Feels like</span>
-														<div>
-															<FontAwesomeIcon icon={faTemperatureHigh}/>
-															<div id='tempFeelsLike'>
-																<span>{Math.floor(item.main.feels_like)}</span>
-																<span>°C</span>
-															</div>
+															<span>{currentWeather.visibility / 1000}</span>
+															<span>km</span>
 														</div>
 													</div>
 												</div>
-											))}
+												<div>
+													<span>Feels like</span>
+													<div>
+														<FontAwesomeIcon icon={faTemperatureHigh}/>
+														<div id='tempFeelsLike'>
+															<span>{Math.floor(currentWeather.main.feels_like)}</span>
+															<span>°C</span>
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -644,7 +657,7 @@ const Weather = () => {
 									</div>
 									{windowWidth > 900 ? (
 										<div className="weatherSoonMainContainer">
-											{soonW.map(item =>
+											{soonW.map((item : ForecastWeatherListItem) =>
 												<div className="weatherSoonContainer" key={`soonW_${item.dt_txt}`}>
 													<div>
 														<div>{item.dt_txt.slice(10, 16)}</div>
@@ -652,7 +665,7 @@ const Weather = () => {
 															<div>
 																<FontAwesomeIcon 
 																	style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}}	
-																	icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
+																	icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon!}
 																/>
 																<div>
 																	<span>{Math.floor(item.main.temp)}</span>
@@ -663,7 +676,7 @@ const Weather = () => {
 																<FontAwesomeIcon icon={faLocationArrow} style={{transform: `rotate(${135+item.wind.deg}deg)`}}/>
 																<div>
 																	<span>{Math.floor(item.wind.speed * 10) / 10}</span>
-																	<span>s/m</span>
+																	<span>m/s</span>
 																</div>
 															</div>
 														</div>
@@ -671,10 +684,9 @@ const Weather = () => {
 												</div>
 											)}
 										</div>
-										
 									) : (
 										<Slider { ...sliderSettings }>
-											{soonW.map(item =>
+											{soonW.map((item : ForecastWeatherListItem) =>
 												<div className="weatherSoonContainer" key={`soonW_${item.dt_txt}`}>
 													<div>
 														<div>{item.dt_txt.slice(10, 16)}</div>
@@ -682,7 +694,7 @@ const Weather = () => {
 															<div>
 																<FontAwesomeIcon 
 																	style={{color: weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).color}}	
-																	icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon}
+																	icon={weatherIcon(item.weather[0].id, item.dt_txt.slice(10, 16)).icon!}
 																/>
 																<div>
 																	<span>{Math.floor(item.main.temp)}</span>

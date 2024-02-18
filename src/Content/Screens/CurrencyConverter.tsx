@@ -1,56 +1,57 @@
 import '../Components/Main.scss'
 import './CurrencyConverter.scss'
 import axios from "axios"
-import moment from 'moment'
-import {currencyApiAxios} from '../../requests.js'
-import { GraficCurrencyConverter } from '../Components/GraficCurrencyConverter.js';
-import { InputBlockCurrencyConverter } from '../Components/InputBlockCurrencyConverter.js';
-import { useState, useRef, useEffect, useMemo } from 'react'
+import * as moment from 'moment'
+import {currencyApiAxios} from '../../requests'
+import { GraficCurrencyConverter } from '../Components/GraficCurrencyConverter';
+import { InputBlockCurrencyConverter } from '../Components/InputBlockCurrencyConverter';
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-multi-date-picker";
 import InputIcon from "react-multi-date-picker/components/input_icon"
 import "react-multi-date-picker/styles/layouts/mobile.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
-import { Loader } from '../Components/Loader.js'
+import { Loader } from '../Components/Loader'
+import {AllCurrencySymbols, ApiResponseType, ConvertCurrencyItem, DatePickerOptions} from "../../types";
 
 const apiKey = 'd235c21d0b78818653feef36b9149cc49272039f'
 
 const CurrencyConverter = () => {
 
-	const datePickerRef = useRef();
+	const datePickerRef = useRef<any>();
 
-	const datePickerOptions = {
+	const datePickerOptions : DatePickerOptions = {
 		label: "YESTERDAY",
 	    type: "button",
 	    className: "rmdp-button rmdp-action-button",
 	    onClick: () => datePickerChooseYesterday(),
 	}
 
-	const [dateValue, setDateValue] = useState(moment().subtract(1, 'day').toDate())
-	const [rightFormatDate, setRightFormatDate] = useState(moment(dateValue).format("YYYY-MM-DD"))
-	const [convertCurrency, setConvertCurrency] = useState(null)
-	const [currencySymbols, setCurrencySymbols] = useState(null)
-	const [currencySymbolsNames, setCurrencySymbolsNames] = useState([])
+	const [dateValue, setDateValue] = useState<any>(moment.default().subtract(1, 'day').toDate())
+	const [rightFormatDate, setRightFormatDate] = useState<string>(moment.default(dateValue).format("YYYY-MM-DD"))
+	const [convertCurrency, setConvertCurrency] = useState<ApiResponseType<ConvertCurrencyItem[]>>(null)
+	const [currencySymbols, setCurrencySymbols] = useState<ApiResponseType<AllCurrencySymbols>>(null)
+	const [currencySymbolsNames, setCurrencySymbolsNames] = useState<string[][]>([])
 
-	const [firstInputValue, setFirstInputValue] = useState('United States Dollar')
-	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState('USD')
-	const [firstInputFocused, setFirstInputFocused] = useState(false)
-	const [firstAmount, setFirstAmount] = useState(1)
-	const [currencyMultipleF, setCurrencyMultipleF] = useState(1)
+	const [firstInputValue, setFirstInputValue] = useState<string>('United States Dollar')
+	const [firstInputShortCurrency, setFirstInputShortCurrency] = useState<string>('USD')
+	const [firstInputFocused, setFirstInputFocused] = useState<boolean>(false)
+	const [firstAmount, setFirstAmount] = useState<number>(1)
+	const [currencyMultipleF, setCurrencyMultipleF] = useState<number | string>(1)
 
-	const [secondInputValue, setSecondInputValue] = useState('Euro')
-	const [secondInputShortCurrency, setSecondInputShortCurrency] = useState('EUR')
-	const [secondInputFocused, setSecondInputFocused] = useState(false)
-	const [secondAmount, setSecondAmount] = useState(1)
-	const [currencyMultipleS, setCurrencyMultipleS] = useState(1)
+	const [secondInputValue, setSecondInputValue] = useState<string>('Euro')
+	const [secondInputShortCurrency, setSecondInputShortCurrency] = useState<string>('EUR')
+	const [secondInputFocused, setSecondInputFocused] = useState<boolean>(false)
+	const [secondAmount, setSecondAmount] = useState<number>(1)
+	const [currencyMultipleS, setCurrencyMultipleS] = useState<number | string>(1)
 
-	const dates = Array.from({ length: 3 }, (item, index) => (moment(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))).reverse()
+	const dates: string[] = Array.from({ length: 3 }, (item, index : number) => (moment.default(rightFormatDate).subtract('months', index*4).format('YYYY-MM-DD'))).reverse()
 
 	const currencyAPI = async () => {
 		try {
 
-			const graficUrlCreator = dates.map(dates => (
+			const graficUrlCreator = dates.map((dates: string) => (
 				currencyApiAxios.get(`/historical/${dates}?api_key=${apiKey}`)
 			))
 
@@ -58,7 +59,7 @@ const CurrencyConverter = () => {
 		    const resS = await currencyApiAxios.get(`/list?api_key=${apiKey}`)
 
 		    return (	
-		    	setCurrencySymbols([resS.data.currencies]),
+		    	setCurrencySymbols([resS.data.currencies][0]),
 		    	setConvertCurrency(resC.map(cur => cur.data).reverse())
 
 		    )
@@ -67,33 +68,35 @@ const CurrencyConverter = () => {
 		  }
 	}
 
-	const swapValues = () => {
+	console.log(currencySymbolsNames)
+
+	const swapValues = (): void => {
 		setFirstInputShortCurrency(secondInputShortCurrency);
 		setSecondInputShortCurrency(firstInputShortCurrency);
 	}
 
-	const handlerAmmountChangeFirst = () => (event) => {
+	const handlerAmountChangeFirst = () => (event : React.ChangeEvent<HTMLInputElement>): void => {
 		if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
-			setFirstAmount(event.target.value)
+			setFirstAmount(+event.target.value)
 		}
 
 		if (!/[^0-9.]/g.test(event.target.value)) {
-			setSecondAmount(event.target.value * currencyMultipleS/currencyMultipleF)
+			setSecondAmount(+event.target.value * +currencyMultipleS/+currencyMultipleF)
 		} 
 	}
 
-	const handlerAmmountChangeSecond = () => (event) => {
+	const handlerAmountChangeSecond = () => (event : React.ChangeEvent<HTMLInputElement>): void => {
 		if (/^\d+(\.\d*)?$/.test(event.target.value) || event.target.value === '') {
-			setSecondAmount(event.target.value)
+			setSecondAmount(+event.target.value)
 		}
 
 		if (!/[^0-9.]/g.test(event.target.value)) {
-			setFirstAmount(event.target.value * currencyMultipleF/currencyMultipleS)
+			setFirstAmount(+event.target.value * +currencyMultipleF/+currencyMultipleS)
 		}
 	}
 
-	const datePickerChooseYesterday = () => {
-		setDateValue(moment().subtract(1, 'day').toDate())
+	const datePickerChooseYesterday = (): void => {
+		setDateValue(moment.default().subtract(1, 'day').toDate())
 		datePickerRef.current.closeCalendar()
 	}
 
@@ -103,7 +106,7 @@ const CurrencyConverter = () => {
 
 	useEffect(()=> {
 		if (currencySymbols) {
-			setCurrencySymbolsNames(Object.entries(currencySymbols[0]))
+			setCurrencySymbolsNames(Object.entries(currencySymbols))
 		}
 	}, [currencySymbols])
 
@@ -117,29 +120,29 @@ const CurrencyConverter = () => {
 	}, [firstInputShortCurrency, secondInputShortCurrency, convertCurrency])
 
 	useMemo(()=> {
-		setSecondAmount(firstAmount * currencyMultipleS/currencyMultipleF)
+		setSecondAmount(firstAmount * +currencyMultipleS/+currencyMultipleF)
 	}, [currencyMultipleF, currencyMultipleS, rightFormatDate])
 
 	useMemo(()=> {
-		setRightFormatDate(moment(new Date(dateValue)).format("YYYY-MM-DD"))
+		setRightFormatDate(moment.default(new Date(dateValue)).format("YYYY-MM-DD"))
 	}, [dateValue.dayOfYear, dateValue.year])
 
 	useMemo(()=> {
 
-		if (currencySymbols && !Object.values(currencySymbols[0]).includes(firstInputValue) && !firstInputFocused) {
-			setFirstInputValue(currencySymbols[0][firstInputShortCurrency])
+		if (currencySymbols && !Object.values(currencySymbols).includes(firstInputValue) && !firstInputFocused) {
+			setFirstInputValue(currencySymbols[firstInputShortCurrency])
 		}
 
-		if (currencySymbols && !Object.values(currencySymbols[0]).includes(secondInputValue) && !secondInputFocused) {
-			setSecondInputValue(currencySymbols[0][secondInputShortCurrency])
+		if (currencySymbols && !Object.values(currencySymbols).includes(secondInputValue) && !secondInputFocused) {
+			setSecondInputValue(currencySymbols[secondInputShortCurrency])
 		}
 
 	}, [firstInputFocused, secondInputFocused])
 
 	useMemo(()=> {
 		if (currencySymbols) {
-			setFirstInputValue(currencySymbols[0][firstInputShortCurrency])
-			setSecondInputValue(currencySymbols[0][secondInputShortCurrency])
+			setFirstInputValue(currencySymbols[firstInputShortCurrency])
+			setSecondInputValue(currencySymbols[secondInputShortCurrency])
 		}
 		
 	}, [firstInputShortCurrency, secondInputShortCurrency])
@@ -158,7 +161,7 @@ const CurrencyConverter = () => {
 								inputValue={firstInputValue}
 								setInputValue={setFirstInputValue}
 								currencySymbolsNames={currencySymbolsNames}
-								handlerAmmountChange={handlerAmmountChangeFirst()}
+								handlerAmountChange={handlerAmountChangeFirst()}
 								amount={firstAmount}
 							/>
 							<div 
@@ -175,7 +178,7 @@ const CurrencyConverter = () => {
 								inputValue={secondInputValue}
 								setInputValue={setSecondInputValue}
 								currencySymbolsNames={currencySymbolsNames}
-								handlerAmmountChange={handlerAmmountChangeSecond()}
+								handlerAmountChange={handlerAmountChangeSecond()}
 								amount={secondAmount}
 							/>
 						</div>
@@ -189,8 +192,8 @@ const CurrencyConverter = () => {
 									className="rmdp-mobile bg-dark"
 								    value={dateValue}
 								    onChange={setDateValue}
-								    minDate={moment('Jan 1, 2010').toDate()}
-								    maxDate={moment().subtract(1, 'day').toDate()}
+								    minDate={moment.default('Jan 1, 2010').toDate()}
+								    maxDate={moment.default().subtract(1, 'day').toDate()}
 								    mobileButtons={[{...datePickerOptions}]}
 									render={<InputIcon/>}
 								/>
