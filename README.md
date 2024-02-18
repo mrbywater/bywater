@@ -7,7 +7,6 @@
     <li>TypeScript</li>
     <li>Axios</li>
     <li>SASS</li>
-    <li>JSX</li>
 </ul>
 
 <div>Email - nickmelnikbywater@gmail.com</div>
