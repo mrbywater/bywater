@@ -4,7 +4,7 @@
 <h3>Stack: </h3>
 <ul>
     <li>ReactJS</li>
-    <li>JavaScript(ES6)</li>
+    <li>TypeScript</li>
     <li>Axios</li>
     <li>SASS</li>
     <li>JSX</li>

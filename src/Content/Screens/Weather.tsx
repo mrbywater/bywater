@@ -292,8 +292,6 @@ const Weather = () => {
 		    const resForecast = await weatherApiAxios.get(`/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
 		    const resAir = await weatherApiAxios.get(`/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`)
 
-			console.log(resCurrencyWeather)
-
 		    return (
 		    	setCurrentWeather([resCurrencyWeather.data][0]),
 				setForecastWeather([resForecast.data][0]),

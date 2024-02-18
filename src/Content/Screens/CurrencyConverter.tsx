@@ -68,8 +68,6 @@ const CurrencyConverter = () => {
 		  }
 	}
 
-	console.log(currencySymbolsNames)
-
 	const swapValues = (): void => {
 		setFirstInputShortCurrency(secondInputShortCurrency);
 		setSecondInputShortCurrency(firstInputShortCurrency);

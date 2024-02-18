@@ -77,7 +77,11 @@ const Home = () => {
 				</div>
 				<div>
 					{skills.map(item => (
-						<div className="selectedSkill" data-aos="flip-down">
+						<div
+							className="selectedSkill"
+							data-aos="flip-down"
+							key={`skill_${item.name}`}
+						>
 							<img src={item.img} alt={`imgOf${item.name}`}/>
 							<span>{item.name}</span>
 						</div>
