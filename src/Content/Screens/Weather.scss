@@ -3,7 +3,10 @@
 .weatherContainer {
 	display: flex;
 	flex-direction: column;
-	height: 600px;
+	min-height: 600px;
+	max-height: 1000px;
+	width: 90%;
+	max-width: 2500px;
 }
 
 .weatherContainer > div {
@@ -667,7 +670,7 @@
 @media (max-width: 1200px) {
 
 	.weatherContainer {
-		height: 900px;
+		min-height: 900px;
 	}
 
 	.searchContainer {
@@ -710,7 +713,7 @@
 @media (max-width: 900px) { 
 
 	.weatherContainer {
-		height: 1500px;
+		min-height: 1500px;
 		justify-content: space-evenly;
 	}
 
@@ -751,7 +754,7 @@
 @media (max-width: 500px) { 
 
 	.weatherContainer {
-		height: 2500px;
+		min-height: 2500px;
 		justify-content: space-evenly;
 	}
 

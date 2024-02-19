@@ -1,7 +1,18 @@
 @import '../../App';
 
+.mainContainerHome {
+	flex-direction: column;
+	align-items: center;
+}
+
+.mainContainerHome > div {
+	width: 90%;
+	max-width: 2500px;
+}
+
 .personContainer {
-	min-height: 80vh;
+	height: 80vh;
+	max-height: 1000px;
 	display: flex;
 	align-items: center;
 	background-color: $low-bg;
@@ -119,7 +130,7 @@
 }
 
 .educationContainerDescp svg { 
-	width: 80%;
+	width: 75%;
 	height: 100%;
 	transform: rotate(20deg);
 	color: $bg-purple;
@@ -170,6 +181,7 @@
 }
 
 .worksContainer {
+	max-width: 100% !important;
 	margin-top: 30px;
     min-height: 500px;
     display: flex;
@@ -325,7 +337,8 @@
 @media (max-width: 1030px) {
 
 	.personContainer {
-		min-height: 60vh;
+		max-height: 60vh;
+		height: 550px;
 		padding: 20px 0;
 	}
 
@@ -430,7 +443,8 @@
 @media (max-width: 750px) {
 
 	.personContainer {
-		min-height: 20vh;
+		height: 20vh;
+		min-height: 200px;
 	}
 
 	.personContainer > div:first-child span:first-child {
@@ -462,6 +476,5 @@
 	.worksBackground > div > div:last-child {
 		width: 90%;
 	}
-
 
 }

@@ -56,7 +56,7 @@ const Home = () => {
     }, [])
 
 	return (
-		<div className="mainContainerContent">
+		<div className="mainContainerContent mainContainerHome">
 			<div className="personContainer">
 				<div>
 					<span><b>Melnik</b> Nick</span>

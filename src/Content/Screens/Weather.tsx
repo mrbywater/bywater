@@ -465,6 +465,7 @@ const Weather = () => {
 										<div 
 											className="dropDownMenuPlaces"
 											onClick={placeSelectHandler(item)}
+											key={`geo_${item.name}_${item.country}`}
 										>
 											<FontAwesomeIcon icon={faLocationDot}/>
 											<span>{item.country}, {item.name}, {item.state}</span>
