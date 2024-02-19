@@ -667,6 +667,14 @@
   }
 }
 
+@media (min-width: 1800px) {
+
+	.searchContainer > div:first-child > svg {
+		bottom: 27%;
+	}
+
+}
+
 @media (max-width: 1200px) {
 
 	.weatherContainer {
