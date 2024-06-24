@@ -1,0 +1,34 @@
+:root {
+  --theme-background: #E9E9E9;
+  --switcher-background: #A8C9EA;
+  --bg-purple: #dedce3;
+  --text-color-on-bg: #22222E;
+  --low-bg: #ADA9BA;
+  --lite-bg-cc: #dedce3;
+  --weather-search-hover: #E9E9E9;
+}
+
+.darkmode {
+  --theme-background: #2c2b36;
+  --switcher-background: #706F8E;
+  --bg-purple: #403f50;
+  --text-color-on-bg: #ADA9BA;
+  --low-bg: #9a94b6;
+  --lite-bg-cc: #b8b7bd;
+  --weather-search-hover: #7b788a;
+}
+
+$black: #22222E;
+$dark-purple: #393A5A;
+$mid-purple: #706F8E;
+$low-purple: #ADA9BA;
+$white: #E9E9E9;
+$yellow: #FFD802;
+$skyblue: #A8C9EA;
+$switcher-background: var(--switcher-background);
+$theme-background: var(--theme-background);
+$bg-purple: var(--bg-purple);
+$text-color-on-bg: var(--text-color-on-bg);
+$low-bg: var(--low-bg);
+$lite-bg-cc: var(--lite-bg-cc);
+$weather-search-hover: var(--weather-search-hover);

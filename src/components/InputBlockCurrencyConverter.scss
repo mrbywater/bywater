@@ -1,0 +1,239 @@
+@import '../styles/colors';
+
+.inputMainContainer {
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 45%;
+	height: 90%;
+}
+
+.inputMainContainer > div {
+	width: 90%;
+	border-radius: 10px;
+	display: flex;
+}
+
+.currencySearch {
+	height: 30%;
+	position: relative;	
+}
+
+.currencySearch input {
+  width: 100%;
+  padding: 0 5px 0 100px;
+  border-radius: 10px;
+  background: inherit;
+  border: 1px solid $black;
+  outline: none;
+  box-shadow: 0px 0px 5px 2px $dark-purple;
+  overflow: hidden;
+	text-overflow: ellipsis;
+	transition: .3s;
+	font: inherit;
+	font-size: 1.7rem;
+}
+
+.currencySearch input:hover {
+	box-shadow: 0px 0px 5px 4px $dark-purple;
+}	
+
+.inputIsFocused {
+	padding:0 25px 0 50px !important;
+	text-overflow: inherit !important;
+}
+
+.currencySearch > svg:nth-child(1) {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	top: calc(50% - 15px);
+	left: 10px;
+	animation: rotateSearch 2s linear infinite;
+} 
+
+.currencySearch > svg:nth-child(2) {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: calc(50% - 10px);
+	right: 5px;
+} 
+
+.currencySearch > svg:nth-child(2):hover {
+	opacity: .8;
+}
+
+.currencySearch > div {
+	position: absolute;
+}
+
+.currencySearch > div:first-child {
+	width: 80px;
+	padding: 3px;
+	height: 40px;
+	background-color: $lite-bg-cc;
+	left: 10px;
+	top: calc(50% - 23px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.3rem;
+	font-weight: bold;
+	border-radius: 30px;
+	user-select: none;
+}
+
+.currencySearch > div:last-child {
+	width: 100%;
+	max-height: 200px;
+	background-color: $lite-bg-cc;
+	border: 1px solid $black;;
+	top: 105%;
+	border-radius: 5px;
+	display: flex;
+	flex-wrap: wrap;
+	overflow: auto;
+	z-index: 999999;
+}
+
+.currencySearch > div:last-child::-webkit-scrollbar {
+  width: 8px;            
+}
+
+.currencySearch > div:last-child::-webkit-scrollbar-track {
+  background: #cbc9d1;
+  border-radius: 10px; 
+}
+
+.currencySearch > div:last-child::-webkit-scrollbar-thumb {
+  background-color: $dark-purple;   
+  border-radius: 3px;       
+}
+
+.selectedCurrency {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+	min-height: 70px;
+	transition: .2s;
+	cursor: pointer;
+}
+
+.selectedCurrency:hover {
+	background-color: #cbc9d1;
+}
+
+.selectedCurrency:first-child {
+	margin-top: 15px;
+}
+
+.selectedCurrency:last-child {
+	margin-bottom: 15px;
+}
+
+.selectedCurrency > span {
+	display: flex;
+	align-items: center;
+	
+}
+
+.selectedCurrency > span:first-child {
+	width: 30%;
+	font-weight: bold;
+	font-size: 1.3rem;
+}
+
+.selectedCurrency > span:last-child {
+	width: 60%;
+	font-size: 1.1rem;
+}
+
+.selectedCurrencyNoItems {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	font-size: 1.5rem;
+	width: 100%;
+	min-height: 70px;
+}
+
+.currencyValue {
+	height: 30%;
+	background-color: $mid-purple;
+  box-shadow: inset 4px 4px $black;
+  justify-content: center;
+  align-items: center;
+}
+
+.amountInput {
+	outline: none;
+	border: none;
+	background: inherit;
+	border-radius: 10px;
+	width: calc(90% - 10px);
+	height: 85%;
+	font: inherit;
+	font-size: 2rem;
+}
+
+.fastCurrency {
+	height: 15%;
+	justify-content: space-around;
+}
+
+.fastCurrency > div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 40px;
+	cursor: pointer;
+	transition: .3s;
+	font-weight: bold;
+}
+
+.fastCurrency > div:hover {
+	background-color: $lite-bg-cc;
+	color: $dark-purple;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; 
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  min-width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 110%;
+  left: 20%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
