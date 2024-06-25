@@ -1,0 +1,27 @@
+@import "../../../styles/colors";
+
+.customButtonContainer {
+  //width: 150px;
+  width: max-content;
+  font-size: 24px;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgb($dark-purple, .3);
+  color: $black;
+  cursor: pointer;
+  transition: background-color .2s ease;
+
+  &:hover {
+    background-color: rgb($dark-purple, .4);
+  }
+
+  &:active {
+    background-color: rgb($dark-purple, .3);
+  }
+
+  > svg {
+    margin-left: 7px;
+  }
+}

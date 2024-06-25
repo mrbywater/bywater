@@ -12,45 +12,41 @@
 
 .personContainer {
 	height: 80vh;
-	max-height: 1000px;
 	display: flex;
 	align-items: center;
+	justify-content: space-evenly;
 	background-color: $low-bg;
 	border-radius: 3px;
+	box-sizing: border-box;
+	padding: 15px;
 }
 
 .personContainer > div {
-	width: 50%;
-	height: 100%;
 	display: flex;
-	flex-direction: column;
 }
 
 .personContainer > div:first-child {
-	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	margin-left: 10%;
-	width: 40%;
 	color: $black;
 }
 
 .personContainer > div:first-child span:first-child {
-	font-size: 6rem;
+	font-size:  clamp(1.5rem, 6vw, 8rem);
 }
 
-.personContainer > div:first-child span:last-child {
-	font-size: 3rem;
-	padding-left: 4px;
+.personContainer > div:first-child span:nth-child(2) {
+	font-size:  clamp(.7rem, 3vw, 4rem);
+	margin-bottom: 10px;
 }
 
 .personContainer > div:last-child {
-	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
 .personContainer > div:last-child img {
-	width: 65%;
+	width: 30vw;
 	border-radius: 100%;
 }
 
@@ -334,21 +330,20 @@
 	color: $theme-background;
 }
 
+@media (min-width: 2100px) {
+	.personContainer {
+		max-height: 1000px;
+	}
+
+	.personContainer > div:last-child img {
+		width: 65%;
+	}
+}
+
 @media (max-width: 1030px) {
 
 	.personContainer {
-		max-height: 60vh;
-		height: 550px;
-		padding: 20px 0;
-	}
-
-	.personContainer > div:first-child span:first-child {
-		font-size: 4rem;
-	}
-
-	.personContainer > div:first-child span:last-child {
-		font-size: 2rem;
-		padding-left: 3px;
+		height: 400px;
 	}
 
 	.educationContainer > div:last-child {
@@ -443,17 +438,7 @@
 @media (max-width: 750px) {
 
 	.personContainer {
-		height: 20vh;
-		min-height: 200px;
-	}
-
-	.personContainer > div:first-child span:first-child {
-		font-size: 2rem;
-	}
-
-	.personContainer > div:first-child span:last-child {
-		font-size: 1rem;
-		padding-left: 1.5px;
+		height: 350px;
 	}
 
 	.selectedSkill {
@@ -477,4 +462,15 @@
 		width: 90%;
 	}
 
+}
+
+@media (max-width: 500px) {
+	.personContainer {
+		height: 200px;
+	}
+
+	.personContainer button {
+		font-size: 16px;
+		padding: 5px 10px;
+	}
 }

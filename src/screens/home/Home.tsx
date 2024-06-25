@@ -4,10 +4,11 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { useScreenResize } from '../../helper';
 import { SKILLS_ARR } from '../../constants';
+import CustomButton from '../../components/formComponents/customButton/CustomButton';
 
 const Home = () => {
   const windowWidth: number = useScreenResize();
@@ -15,6 +16,13 @@ const Home = () => {
   useEffect(() => {
     AOS.init();
   }, []);
+
+  const handleDownloadCV = () => {
+    const link = document.createElement('a');
+    link.href = require('../../media/CV_Nick_Melnik.pdf');
+    link.download = 'CV_Nick_Melnik.pdf';
+    link.click();
+  };
 
   return (
     <div className="mainContainerContent mainContainerHome">
@@ -24,6 +32,9 @@ const Home = () => {
             <b>Melnik</b> Nick
           </span>
           <span>React developer</span>
+          <CustomButton icon={faDownload} onClick={handleDownloadCV}>
+            CV
+          </CustomButton>
         </div>
         <div>
           <img src={require('../../media/myPhoto.jpg')} alt="myPhoto" />
