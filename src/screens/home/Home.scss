@@ -48,6 +48,7 @@
 .personContainer > div:last-child img {
 	width: 30vw;
 	border-radius: 100%;
+	user-select: none;
 }
 
 .blocksLabel {

@@ -78,8 +78,8 @@ export const SKILLS_ARR = [
     img: require('../media/axios.png'),
   },
   {
-    name: 'ES6',
-    img: require('../media/es6.png'),
+    name: 'Redux Toolkit',
+    img: require('../media/redux.png'),
   },
 ];
 

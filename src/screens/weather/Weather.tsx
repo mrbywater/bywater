@@ -122,7 +122,7 @@ const Weather = () => {
   const geoAPI = async () => {
     try {
       const resGeo = await geoApiAxios.get(
-        `/direct?q=${placeNameValue ? placeNameValue : ' '}&limit=5&appid=${WEATHER_API_KEY}`,
+        `/direct?q=${placeNameValue ? placeNameValue : 'london'}&limit=5&appid=${WEATHER_API_KEY}`,
       );
 
       return setGeo([resGeo.data][0]);
