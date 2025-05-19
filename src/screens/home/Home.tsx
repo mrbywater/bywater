@@ -6,12 +6,12 @@ import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { useScreenResize } from '../../helper';
+// import { useScreenResize } from '../../helper';
 import { SKILLS_ARR } from '../../constants';
 import CustomButton from '../../components/formComponents/customButton/CustomButton';
 
 const Home = () => {
-  const windowWidth: number = useScreenResize();
+  // const windowWidth: number = useScreenResize();
 
   useEffect(() => {
     AOS.init();
@@ -83,7 +83,7 @@ const Home = () => {
                 <span>Bachelor&apos;s degree</span>
               </div>
               <div>
-                <span>Studying now</span>
+                <span>Already have</span>
                 <span>Master&apos;s degree</span>
               </div>
             </div>
@@ -91,34 +91,34 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="worksContainer">
-        <div
-          className="blocksLabel"
-          data-aos="fade-down"
-          data-aos-easing="linear"
-          data-aos-duration="500">
-          My works
-        </div>
-        <div className="worksBackground">
-          <div>
-            <div data-aos="zoom-in-down">
-              <span>
-                <b>Graduate work</b>
-              </span>
-              <span>Website/online store for car service station</span>
-            </div>
-            <div data-aos="zoom-in-down">
-              <video
-                width={windowWidth < 1200 ? '80%' : '500px'}
-                height="80%"
-                controls>
-                <source src={require('../../media/GW.mp4')} type="video/mp4" />
-                Sorry, your browser doesn&apos;t support videos.
-              </video>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/*<div className="worksContainer">*/}
+      {/*  <div*/}
+      {/*    className="blocksLabel"*/}
+      {/*    data-aos="fade-down"*/}
+      {/*    data-aos-easing="linear"*/}
+      {/*    data-aos-duration="500">*/}
+      {/*    My works*/}
+      {/*  </div>*/}
+      {/*<div className="worksBackground">*/}
+      {/*  <div>*/}
+      {/*    <div data-aos="zoom-in-down">*/}
+      {/*      <span>*/}
+      {/*        <b>Graduate work</b>*/}
+      {/*      </span>*/}
+      {/*      <span>Website/online store for car service station</span>*/}
+      {/*    </div>*/}
+      {/*    <div data-aos="zoom-in-down">*/}
+      {/*      <video*/}
+      {/*        width={windowWidth < 1200 ? '80%' : '500px'}*/}
+      {/*        height="80%"*/}
+      {/*        controls>*/}
+      {/*        <source src={require('../../media/GW.mp4')} type="video/mp4" />*/}
+      {/*        Sorry, your browser doesn&apos;t support videos.*/}
+      {/*      </video>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
+      {/*</div>*/}
       <div className="aboutMeContainer">
         <div
           className="blocksLabel"
@@ -130,11 +130,12 @@ const Home = () => {
         <div>
           <div data-aos="zoom-in-down">
             <span>
-              I&apos;m a 22-year-old computer science student from Ukraine,
-              familiar with ReactJS, and have written several trial projects
-              using React and ReactNative, as well as a full-fledged project -
-              my thesis. This is a portfolio website and plus a couple of small
-              works.
+              I&apos;m a developer with experience in creating web and mobile
+              applications on React and React Native. I work confidently with
+              JavaScript, TypeScript, Redux and modern development tools. Focus
+              on clean code, performance and team interaction. Open to new
+              challenges and technologies. This is a portfolio website and plus
+              a couple of small works.
             </span>
             <span>
               <b>E-mail:</b> nickmelnikbywater@gmail.com
